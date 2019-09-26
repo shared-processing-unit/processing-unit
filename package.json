@@ -1,19 +1,23 @@
 {
-  "name": "client",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"todo\" && exit 0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shared-processing-unit/client.git"
-  },
-  "author": "",
-  "license": "GNU AFFERO GPL 3.0",
-  "bugs": {
-    "url": "https://github.com/shared-processing-unit/client/issues"
-  },
-  "homepage": "https://github.com/shared-processing-unit/client#readme"
+    "name": "dispatcher",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"todo\" && exit 0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/shared-processing-unit/client.git"
+    },
+    "author": "Dijan Helbling, Roman Kramer",
+    "license": "AGPL-3.0-only",
+    "bugs": {
+        "url": "https://github.com/shared-processing-unit/client/issues"
+    },
+    "homepage": "https://github.com/shared-processing-unit/client#readme",
+    "devDependencies": {
+        "@shared-processing-unit/prettier-config": "^1.0.3"
+    },
+    "prettier": "@shared-processing-unit/prettier-config"
 }
