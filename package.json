@@ -4,7 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"todo\" && exit 0"
+        "test": "echo \"todo\" && exit 0",
+        "start": "parcel ./src/index.html",
+        "server": "node ./src/server.js"
     },
     "repository": {
         "type": "git",
@@ -26,6 +28,7 @@
     },
     "prettier": "@shared-processing-unit/prettier-config",
     "dependencies": {
+        "socket.io": "^2.3.0",
         "socket.io-client": "^2.3.0"
     }
 }
