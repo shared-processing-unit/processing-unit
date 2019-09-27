@@ -1,5 +1,7 @@
 dist
 .cache
+## manual
+.vscode
 
 # Logs
 logs
