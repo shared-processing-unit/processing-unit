@@ -2,11 +2,9 @@
     "name": "dispatcher",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "./src/communication.ts",
     "scripts": {
-        "test": "echo \"todo\" && exit 0",
-        "start": "parcel ./src/index.html",
-        "server": "node ./src/server.js"
+        "test": "jest --detectOpenHandles"
     },
     "repository": {
         "type": "git",
@@ -20,15 +18,19 @@
     "homepage": "https://github.com/shared-processing-unit/client#readme",
     "devDependencies": {
         "@shared-processing-unit/prettier-config": "^1.0.3",
+        "@types/jest": "^24.0.18",
         "@types/node": "^12.7.8",
-        "@types/socket.io-client": "^1.4.32",
+        "@types/ws": "^6.0.3",
         "cross-env": "^6.0.0",
-        "parcel-bundler": "^1.12.3",
+        "jest": "^24.9.0",
+        "ts-jest": "^24.1.0",
         "typescript": "^3.6.3"
     },
     "prettier": "@shared-processing-unit/prettier-config",
     "dependencies": {
-        "socket.io": "^2.3.0",
-        "socket.io-client": "^2.3.0"
+        "ws": "^7.1.2"
+    },
+    "jest": {
+        "preset": "ts-jest"
     }
 }

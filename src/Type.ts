@@ -1,4 +1,4 @@
 export enum Type {
-    Algorithm = 'algorithm',
-    Data = 'data',
+    Algorithm = 'shared-processing-unit-algorithm',
+    Data = 'shared-processing-unit-data',
 }
