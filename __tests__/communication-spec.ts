@@ -95,3 +95,37 @@ describe('createScriptTagsWithinRootDiv', () => {
         expect(spy).toHaveBeenCalled()
     })
 })
+
+describe('run', () => {
+    test('run should call "createScriptTagsWithinRootDiv"', () => {
+        const mock = {
+            send: jest.fn(),
+            on: jest.fn(),
+        }
+        const spy = jest
+            .spyOn(communication, 'createScriptTagsWithinRootDiv')
+            .mockImplementation()
+        run(mock, 'id')
+        expect(spy).toHaveBeenCalled()
+    })
+    test('run should call send with registration values on websocket', () => {
+        const mock = {
+            send: jest.fn(),
+            on: jest.fn(),
+        }
+        const spy = jest.spyOn(mock, 'send')
+
+        run(mock, 'id')
+        expect(spy).toHaveBeenCalledWith({ route: 'register', data: 'id' })
+    })
+    test('run should register listener on websocket', () => {
+        const mock = {
+            send: jest.fn(),
+            on: jest.fn(),
+        }
+        const spy = jest.spyOn(mock, 'on')
+
+        run(mock, 'id')
+        expect(spy).toHaveBeenCalledWith('message', loadScript)
+    })
+})
