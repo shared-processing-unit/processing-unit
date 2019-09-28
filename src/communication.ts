@@ -1,6 +1,6 @@
-import * as WebSocket from 'ws'
 import { Type } from './Type'
 import { Message, Incomming } from './Message'
+import { IWebsocket } from './IWebsocket'
 
 export const rootId = 'shared-processing-unit'
 export const loadScript = (message: Message) => {
@@ -36,7 +36,7 @@ export const createScriptTagsWithinRootDiv = (rootId: string) => {
     scriptTags.forEach(tag => root.appendChild(tag))
 }
 
-export const run = (webSocket: WebSocket, id: string) => {
+export const run = (webSocket: IWebsocket, id: string) => {
     const registerMsg: Incomming = { route: 'register', data: id }
     createScriptTagsWithinRootDiv(rootId)
 
