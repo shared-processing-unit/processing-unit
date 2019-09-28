@@ -3,29 +3,31 @@ import { Message, Incomming } from './Message'
 import { IWebsocket } from './IWebsocket'
 
 export const rootId = 'shared-processing-unit'
-export const loadScript = (message: Message) => {
-    if (!message || !message.type || !message.link) {
-        throw new Error(
-            'loadScript call with invalid parameter. should be a message object.'
-        )
+
+export const messageGuard = (data: any): data is Message => {
+    if (data && (data as Message).link && (data as Message).type) {
+        return true
     }
-    const { type, link } = message
-    const scriptTag = document.getElementById(type)
-    scriptTag.setAttribute('src', link)
+    throw new Error('loadScript InvalidArgumentException')
 }
 
-export const throwExceptionIfRootIdNotExists = (id: string) => {
-    if (!document.getElementById(id)) {
-        throw new Error(
-            `Pleace create a div with the following id: "${rootId}"`
-        )
+export const loadScript = (message: any) => {
+    if (messageGuard(message)) {
+        const scriptTag = document.getElementById(message.type)
+        scriptTag.setAttribute('src', message.link)
     }
+}
+
+export const getRoot = (id: string) => {
+    const root = document.getElementById(rootId)
+    if (root) {
+        return root
+    }
+    throw new Error(`Please create: <div id="${rootId}"></div>`)
 }
 
 export const createScriptTagsWithinRootDiv = (rootId: string) => {
-    throwExceptionIfRootIdNotExists(rootId)
-
-    const root = document.getElementById(rootId)
+    const root = getRoot(rootId)
     const scriptTags = Object.keys(Type)
         .map(key => Type[key])
         .map(id => {
