@@ -5,7 +5,7 @@
     "main": "./src/communication.ts",
     "scripts": {
         "test": "jest --detectOpenHandles",
-        "build": "parcel build ./src/mainscript.ts",
+        "build": "parcel build ./src/mainscript.ts --experimental-scope-hoisting",
         "start": "concurrently \"yarn start:server\" \"yarn start:client\"",
         "start:server": "parcel build ./example/helloworld.ts && node ./example/server",
         "start:client": "parcel ./example/index.html --open"
