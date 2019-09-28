@@ -1,6 +1,6 @@
-import { Type } from './Type'
-import { Message, Incomming } from './Message'
-import { IWebsocket } from './IWebsocket'
+import { Type } from './types/Type'
+import { Incoming, Message } from './types/Incoming'
+import { IWebsocket } from './interfaces/IWebsocket'
 
 export const rootId = 'shared-processing-unit'
 
@@ -38,7 +38,7 @@ export const createScriptTagsWithinRootDiv = (rootId: string) => {
 }
 
 export const run = (webSocket: IWebsocket, id: string) => {
-    const registerMsg: Incomming = { route: 'register', data: id }
+    const registerMsg: Incoming = { route: 'register', data: id }
     createScriptTagsWithinRootDiv(rootId)
 
     webSocket.onopen = () => webSocket.send(JSON.stringify(registerMsg))

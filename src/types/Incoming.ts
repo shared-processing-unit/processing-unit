@@ -3,7 +3,7 @@ export type Message = {
     link: string
 }
 
-export type Incomming = {
+export type Incoming = {
     route: string
     data: string
 }

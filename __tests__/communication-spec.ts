@@ -1,6 +1,6 @@
 import * as communication from '../src/communication'
-import { Message } from '../src/Message'
-import { Type } from '../src/Type'
+import { Message } from '../src/types/Incoming'
+import { Type } from '../src/types/Type'
 
 const {
     rootId,
