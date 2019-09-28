@@ -4,26 +4,25 @@ import { IWebsocket } from './IWebsocket'
 
 export const rootId = 'shared-processing-unit'
 
-export const messageGuard = (data: any): data is Message => {
-    if (data && (data as Message).link && (data as Message).type) {
-        return true
-    }
-    throw new Error('loadScript InvalidArgumentException')
-}
-
-export const loadScript = (message: any) => {
-    if (messageGuard(message)) {
-        const scriptTag = document.getElementById(message.type)
-        scriptTag.setAttribute('src', message.link)
+export const checkMessage = (message: Message) => {
+    if (!(message && message.link && message.type)) {
+        throw new Error('loadScript InvalidArgumentException')
     }
 }
 
-export const getRoot = (id: string) => {
+export const loadScript = (message: Message) => {
+    checkMessage(message)
+
+    const scriptTag = document.getElementById(message.type)
+    scriptTag.setAttribute('src', message.link)
+}
+
+export const getRoot = (rootId: string) => {
     const root = document.getElementById(rootId)
-    if (root) {
-        return root
+    if (!root) {
+        throw new Error(`Please create: <div id="${rootId}"></div>`)
     }
-    throw new Error(`Please create: <div id="${rootId}"></div>`)
+    return root
 }
 
 export const createScriptTagsWithinRootDiv = (rootId: string) => {

@@ -4,20 +4,20 @@ import { Type } from '../src/Type'
 
 const {
     rootId,
-    messageGuard,
+    checkMessage,
     loadScript,
     getRoot,
     createScriptTagsWithinRootDiv,
     run,
 } = communication
 
-describe('messageGuard', () => {
+describe('checkMessage', () => {
     test('call with valid parameter', () => {
         const message: Message = {
             link: 'http://testlink.com/',
             type: Type.Algorithm,
         }
-        expect(messageGuard(message)).toBeTruthy()
+        expect(() => checkMessage(message)).not.toThrowError()
     })
 
     test('call with invalid parameter', () => {
@@ -58,12 +58,12 @@ describe('loadScript', () => {
         expect((element as HTMLScriptElement).src).toBe(message.link)
     })
 
-    test('loadScript should call "messageGuard"', () => {
+    test('loadScript should call "checkMessage"', () => {
         const message: Message = {
             link: 'http://testlink.com/',
             type: Type.Algorithm,
         }
-        const spy = jest.spyOn(communication, 'messageGuard')
+        const spy = jest.spyOn(communication, 'checkMessage')
         loadScript(message)
         expect(spy).toHaveBeenCalled()
     })
