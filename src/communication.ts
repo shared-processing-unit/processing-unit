@@ -40,6 +40,6 @@ export const run = (webSocket: IWebsocket, id: string) => {
     const registerMsg: Incomming = { route: 'register', data: id }
     createScriptTagsWithinRootDiv(rootId)
 
-    webSocket.send(registerMsg)
-    webSocket.on('message', loadScript)
+    webSocket.onopen = () => webSocket.send(JSON.stringify(registerMsg))
+    webSocket.onmessage = ({ data }) => loadScript(JSON.parse(data))
 }

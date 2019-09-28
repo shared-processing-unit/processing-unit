@@ -4,7 +4,11 @@
     "description": "",
     "main": "./src/communication.ts",
     "scripts": {
-        "test": "jest --detectOpenHandles"
+        "test": "jest --detectOpenHandles",
+        "build": "parcel build ./src/mainscript.ts",
+        "start": "concurrently \"yarn start:server\" \"yarn start:client\"",
+        "start:server": "parcel build ./example/helloworld.ts && node ./example/server",
+        "start:client": "parcel ./example/index.html --open"
     },
     "repository": {
         "type": "git",
@@ -21,8 +25,10 @@
         "@types/jest": "^24.0.18",
         "@types/node": "^12.7.8",
         "@types/ws": "^6.0.3",
+        "concurrently": "^4.1.2",
         "cross-env": "^6.0.0",
         "jest": "^24.9.0",
+        "parcel-bundler": "^1.12.3",
         "ts-jest": "^24.1.0",
         "typescript": "^3.6.3"
     },

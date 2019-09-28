@@ -3,4 +3,4 @@
 # mainscript
 
 .env-File with the following entries:
-wss="serveraddress"
+connection=wss

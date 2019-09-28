@@ -1,5 +1,5 @@
-import { Message, Incomming } from './Message'
 export interface IWebsocket {
-    send: (incomming: Incomming) => void
-    on: (name: string, listener: (message: Message) => void) => {}
+    onopen: (ev: Event) => any
+    send: (message: string) => void
+    onmessage: ({ data: string }) => void
 }
