@@ -19,13 +19,9 @@ http.createServer((_, response) => {
 const wss = new WebSocket.Server({ port: 8080 })
 
 wss.on('connection', ws => {
-    ws.on('message', message => {
-        console.log('received: %s', JSON.parse(message))
-    })
-    ws.send(
-        JSON.stringify({
-            link: 'http://localhost:3000/',
-            type: 'shared-processing-unit-algorithm',
-        })
+    console.log('WebSocket-Server ready on Port 3000')
+    ws.on('message', message =>
+        console.log(`received: ${JSON.stringify(message)}`)
     )
+    ws.send('http://localhost:3000/')
 })

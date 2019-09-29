@@ -1,13 +1,13 @@
-import Communication from './classes/Communication'
-import { run } from './communication'
+import DOMWebSocketMapper from './DOMWebSocketMapper'
 
-// TODO put in config file
-export const rootId: string = 'shared-processing-unit'
-export const connectionId: string = process.env.connection
-export const clientId: string = window.location.href
+const webSocket = new WebSocket(process.env.connection)
+const rootelement = document.getElementById(process.env.rootId)
+const scriptTag = document.createElement('script')
+rootelement.appendChild(scriptTag)
 
-// const com: Communication = new Communication(rootId, connectionId, clientId)
-// com.run()
-
-const ws = new WebSocket(connectionId)
-run(ws, clientId)
+const mapper = new DOMWebSocketMapper(
+    webSocket,
+    scriptTag,
+    window.location.href
+)
+mapper.mapWebSocketToDOMElement()
