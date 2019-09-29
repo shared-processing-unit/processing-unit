@@ -12,7 +12,7 @@ describe('Comminucation', () => {
     beforeEach(() => {
         document.body.innerHTML = `<script id="${rootId}"></script>`
     })
-    test('mapWebSocketToDOMElement should not change the dom', () => {
+    test('mapWebSocketToDOMElement should not change the dom.', () => {
         const script = document.getElementById(rootId)
         const mapper = new DOMWebSocketMapper(mock, script, clientId)
         mapper.mapWebSocketToDOMElement()
@@ -20,7 +20,27 @@ describe('Comminucation', () => {
         expect(document.body.innerHTML).toBe(`<script id="${rootId}"></script>`)
     })
 
-    test('if onmessage is called, the link-tag should be changed', () => {
+    test('the link-tag should adapt after every onmessage call.', () => {
+        const script = document.getElementById(rootId)
+        const mapper = new DOMWebSocketMapper(mock, script, clientId)
+        mapper.mapWebSocketToDOMElement()
+
+        const testlinks = new Array(5)
+            .fill({})
+            .map((_, i) => `http://testlink${i}.com/`)
+        testlinks.forEach(data => {
+            mock.onmessage({ data })
+
+            const changedScript = document.getElementById(rootId)
+
+            expect(changedScript).not.toBeNull()
+            expect(changedScript.tagName).toBe('SCRIPT')
+            expect(changedScript).toBeInstanceOf(HTMLScriptElement)
+            expect((changedScript as HTMLScriptElement).src).toBe(data)
+        })
+    })
+
+    test('if onmessage is called, the link-tag should be changed.', () => {
         const script = document.getElementById(rootId)
         const mapper = new DOMWebSocketMapper(mock, script, clientId)
         mapper.mapWebSocketToDOMElement()
@@ -36,7 +56,7 @@ describe('Comminucation', () => {
         expect((changedScript as HTMLScriptElement).src).toBe(testlink)
     })
 
-    test('ctor should register client after onopen', () => {
+    test('ctor should register client after onopen.', () => {
         const script = document.getElementById(rootId)
         new DOMWebSocketMapper(mock, script, clientId)
         mock.onopen(null)
