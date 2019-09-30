@@ -15,5 +15,4 @@ deploy:
   region: eu-north-1
   local_dir: dist
   on:
-    branch: deploy_on_aws
     repo: shared-processing-unit/spu.processing-unit
