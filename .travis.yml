@@ -11,4 +11,5 @@ deploy:
   bucket: processing-unit
   acl: public_read
   on:
+    branch: deploy_on_aws
     repo: shared-processing-unit/spu.processing-unit
