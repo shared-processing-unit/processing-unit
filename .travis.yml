@@ -1,18 +1,21 @@
 language: node_js
 node_js:
-  - node
+    - node
+env:
+    - connection=wss://qwsedaenc1.execute-api.eu-north-1.amazonaws.com/Prod
+    - rootId=shared-processing-unit
 before_install:
-  - export TZ=Europe/Zurich
+    - export TZ=Europe/Zurich
 before_deploy: 'yarn build'
 deploy:
-  provider: s3
-  access_key_id: AKIASUS73RVHAZRQFVE5
-  secret_access_key:
-    secure: esv/kTKnmT8I+n2JdYKkdCBgg6Zby/5yNcMpFlfFFouKJG4ZXOnxC+u68dvqPcvsQWg44wQfBg3f8lOQXTHd+Rkxo0S0dPHZR/ijY6ktJSz/LPNINXS5GZBOV6Ki3HQDC8Xi102vihW/xBPsSWtLlyLaEQ5/P/Z5Uaj6e0PciieHjSupglFpcvj3rSJuxVvaldMUmbvdBR37lyfSDVCIWygrmUWKepUftQ0HsUlYYQiy2r0IC6FuvVthUxtrdm5ksMIPDWNEdImm9sON8AyDRhgUl2ydP2v2xGLX07gpGf+Y/sCN03AxlLuS3rJKp4VJWdQxZ8Zo+fn+QlkLpbDkyVIXmxq6fIcThtJjdvgMnAuvLR4ejO3vZ/oYDzB2dV0DiKceOqkCp3OdoiWiy/KWrA63oh/VlmSLkdd/1mL/GTKDsFu8YI8sYEcigkRqQ6eg2qW6TVKzZkLpzasXw0LP08JSxR/aAxsTqHHmwxSmmxUSJDCLDZdAwMhe8WWnPPBvxLdfLZj90WUpntXpQ3a5y0xj7SOBzJr4ssZBfBCA6kMN+vVZKZVKT/4p6mps7t2glaOAVINIJv8MSxit015DJaM2MWYsxmeXfGENbzJymSh1L5D3Y/1Eiff4Qd90nDRBeuEGnzBQnlyVbuiom4sniAzURcfPJqRAjRD78C8VICg=
-  bucket: processing-unit
-  acl: public_read
-  skip_cleanup: true
-  region: eu-north-1
-  local_dir: dist
-  on:
-    repo: shared-processing-unit/spu.processing-unit
+    provider: s3
+    access_key_id: AKIASUS73RVHAZRQFVE5
+    secret_access_key:
+        secure: esv/kTKnmT8I+n2JdYKkdCBgg6Zby/5yNcMpFlfFFouKJG4ZXOnxC+u68dvqPcvsQWg44wQfBg3f8lOQXTHd+Rkxo0S0dPHZR/ijY6ktJSz/LPNINXS5GZBOV6Ki3HQDC8Xi102vihW/xBPsSWtLlyLaEQ5/P/Z5Uaj6e0PciieHjSupglFpcvj3rSJuxVvaldMUmbvdBR37lyfSDVCIWygrmUWKepUftQ0HsUlYYQiy2r0IC6FuvVthUxtrdm5ksMIPDWNEdImm9sON8AyDRhgUl2ydP2v2xGLX07gpGf+Y/sCN03AxlLuS3rJKp4VJWdQxZ8Zo+fn+QlkLpbDkyVIXmxq6fIcThtJjdvgMnAuvLR4ejO3vZ/oYDzB2dV0DiKceOqkCp3OdoiWiy/KWrA63oh/VlmSLkdd/1mL/GTKDsFu8YI8sYEcigkRqQ6eg2qW6TVKzZkLpzasXw0LP08JSxR/aAxsTqHHmwxSmmxUSJDCLDZdAwMhe8WWnPPBvxLdfLZj90WUpntXpQ3a5y0xj7SOBzJr4ssZBfBCA6kMN+vVZKZVKT/4p6mps7t2glaOAVINIJv8MSxit015DJaM2MWYsxmeXfGENbzJymSh1L5D3Y/1Eiff4Qd90nDRBeuEGnzBQnlyVbuiom4sniAzURcfPJqRAjRD78C8VICg=
+    bucket: processing-unit
+    acl: public_read
+    skip_cleanup: true
+    region: eu-north-1
+    local_dir: dist
+    on:
+        repo: shared-processing-unit/spu.processing-unit
