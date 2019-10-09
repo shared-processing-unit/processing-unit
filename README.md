@@ -11,5 +11,4 @@ example:
 
 ```
     connection=ws://localhost:8080
-    rootId=shared-processing-unit
 ```
