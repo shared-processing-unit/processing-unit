@@ -2,10 +2,9 @@
 
 ## preconditions
 
-.env-File with the following fields:
+.env-variable with the following field:
 
--   connection
--   rootId
+-   connection=wss-connection
 
 example:
 
