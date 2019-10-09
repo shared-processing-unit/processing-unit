@@ -3,7 +3,6 @@ node_js:
     - node
 env:
     - connection=wss://qwsedaenc1.execute-api.eu-north-1.amazonaws.com/Prod
-    - rootId=shared-processing-unit
 before_install:
     - export TZ=Europe/Zurich
 before_deploy: 'yarn build'
@@ -18,4 +17,4 @@ deploy:
     region: eu-north-1
     local_dir: dist
     on:
-        repo: shared-processing-unit/spu.processing-unit
+        repo: rkram3r/spu.processing-unit

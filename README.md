@@ -2,14 +2,12 @@
 
 ## preconditions
 
-.env-File with the following fields:
+.env-variable with the following field:
 
--   connection
--   rootId
+-   connection=wss-connection
 
 example:
 
 ```
     connection=ws://localhost:8080
-    rootId=shared-processing-unit
 ```
