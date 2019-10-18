@@ -2,7 +2,7 @@ language: node_js
 node_js:
     - node
 env:
-    - connection=wss://qwsedaenc1.execute-api.eu-north-1.amazonaws.com/Prod
+    - connection=wss://mqrf84c4a8.execute-api.eu-north-1.amazonaws.com/Prod
 before_install:
     - export TZ=Europe/Zurich
 before_deploy: yarn build
