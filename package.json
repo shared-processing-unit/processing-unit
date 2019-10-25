@@ -7,7 +7,7 @@
         "test": "jest --detectOpenHandles",
         "build": "parcel build ./src/index.ts --experimental-scope-hoisting",
         "start": "concurrently \"yarn start:server\" \"yarn start:client\"",
-        "start:server": "parcel build ./example/helloworld.ts && node ./example/server",
+        "start:server": "node ./example/server",
         "start:client": "parcel ./example/index.html --open"
     },
     "repository": {
