@@ -1,12 +1,6 @@
-import DOMWebSocketMapper from './DOMWebSocketMapper'
+import SharedProcessingUnit from './SharedProcessingUnit'
 
 const webSocket = new WebSocket(process.env.connection)
-const scriptTag = document.createElement('script')
-document.body.appendChild(scriptTag)
 
-const mapper = new DOMWebSocketMapper(
-    webSocket,
-    scriptTag,
-    window.location.href
-)
-mapper.mapWebSocketToDOMElement()
+const spu = new SharedProcessingUnit(webSocket, window.location.href)
+spu.run()
