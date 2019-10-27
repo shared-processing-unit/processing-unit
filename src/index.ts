@@ -1,6 +1,6 @@
 import SharedProcessingUnit from './SharedProcessingUnit'
 
 const webSocket = new WebSocket(process.env.connection)
+const spu = new SharedProcessingUnit(webSocket)
 
-const spu = new SharedProcessingUnit(webSocket, window.location.href)
 spu.run()
