@@ -14,16 +14,17 @@ export default class SharedProcessingUnit {
         this.webSocket.onopen = event => console.log(event)
     }
 
-    private runStrategy({ data, routes }) {
-        if (routes === Routes.Algorithm) {
+    private runStrategy({ data, route }) {
+        if (route === Routes.Algorithm) {
             this.createWorker(data)
         }
-        if (routes === Routes.Data) {
+        if (route === Routes.Data) {
             this.worker.postMessage(data)
         }
     }
     private createWorker(algorithm: string) {
         const blob = new Blob([algorithm], { type: 'application/javascript' })
+        this.worker && this.worker.terminate()
         this.worker = new Worker(URL.createObjectURL(blob))
         this.worker.onmessage = ({ data }) => {
             const registerMessage = JSON.stringify({
