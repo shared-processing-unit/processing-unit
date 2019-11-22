@@ -1,5 +1,4 @@
 import IWebsocket from './IWebsocket'
-import { Routes } from './Routes'
 
 export default class SharedProcessingUnit {
     private worker: Worker
@@ -11,16 +10,11 @@ export default class SharedProcessingUnit {
     public run() {
         this.webSocket.onmessage = ({ data }) =>
             this.runStrategy(JSON.parse(data))
-        this.webSocket.onopen = event => console.log(event)
     }
 
-    private runStrategy({ data, route }) {
-        if (route === Routes.Algorithm) {
-            this.createWorker(data)
-        }
-        if (route === Routes.Data) {
-            this.worker.postMessage(data)
-        }
+    private runStrategy({ data, algorithm }) {
+        this.createWorker(algorithm)
+        this.worker.postMessage(data)
     }
     private createWorker(algorithm: string) {
         const blob = new Blob([algorithm], { type: 'application/javascript' })
@@ -28,7 +22,7 @@ export default class SharedProcessingUnit {
         this.worker = new Worker(URL.createObjectURL(blob))
         this.worker.onmessage = ({ data }) => {
             const registerMessage = JSON.stringify({
-                route: Routes.Result,
+                action: 'result',
                 data,
             })
             this.webSocket.send(registerMessage)
