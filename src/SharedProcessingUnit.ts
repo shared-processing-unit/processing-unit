@@ -1,8 +1,15 @@
-import IWebsocket from './IWebsocket'
+interface IWebsocket {
+    onopen: (ev: Event) => any
+    send: (message: string) => void
+    onmessage: ({ data: string }) => void
+}
 
 export default class SharedProcessingUnit {
     private worker: Worker
-    constructor(private readonly webSocket: IWebsocket) {
+    constructor(
+        private readonly webSocket: IWebsocket,
+        private readonly getData: <T>(link: string) => Promise<T>
+    ) {
         if (!webSocket) {
             throw new Error('InvalidArgumentException')
         }
@@ -12,20 +19,22 @@ export default class SharedProcessingUnit {
             this.runStrategy(JSON.parse(data))
     }
 
-    private runStrategy({ data, algorithm }) {
-        this.createWorker(algorithm)
-        this.worker.postMessage(data)
+    private async runStrategy({ data, algorithm }) {
+        this.createWorker(await this.getData(algorithm))
+        this.worker.postMessage(await this.getData(data))
     }
-    private createWorker(algorithm: string) {
+
+    private async createWorker(algorithm: string) {
         const blob = new Blob([algorithm], { type: 'application/javascript' })
         this.worker && this.worker.terminate()
         this.worker = new Worker(URL.createObjectURL(blob))
         this.worker.onmessage = ({ data }) => {
-            const registerMessage = JSON.stringify({
-                action: 'result',
-                data,
-            })
-            this.webSocket.send(registerMessage)
+            this.webSocket.send(
+                JSON.stringify({
+                    action: 'result',
+                    data,
+                })
+            )
         }
     }
 }
