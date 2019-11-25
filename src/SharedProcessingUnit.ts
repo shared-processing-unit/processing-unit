@@ -21,9 +21,7 @@ export default class SharedProcessingUnit {
 
     private async runStrategy({ data, algorithm }) {
         if (!(data && algorithm)) {
-            throw Error(
-                `algo or data not defined. recieved data:${data},algorithm:${algorithm}`
-            )
+            return
         }
         this.worker && this.worker.terminate()
         this.createWorker(await this.getData(algorithm))
