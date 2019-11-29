@@ -7,6 +7,7 @@ interface IWebsocket {
 export default class SharedProcessingUnit {
     private worker: Worker
     private taskId: string
+    private token: string
     constructor(
         private readonly webSocket: IWebsocket,
         private readonly getData: (link: string) => Promise<string>
@@ -20,11 +21,12 @@ export default class SharedProcessingUnit {
             this.runStrategy(JSON.parse(data))
     }
 
-    private async runStrategy({ data, algorithm, taskId }) {
-        if (!(data && algorithm && taskId)) {
+    private async runStrategy({ data, algorithm, taskId, token }) {
+        if (!(data && algorithm && taskId && token)) {
             return
         }
         this.taskId = taskId
+        this.token = token
         this.worker && this.worker.terminate()
         this.createWorker(await this.getData(algorithm))
         this.defineOnMessage()
@@ -36,7 +38,11 @@ export default class SharedProcessingUnit {
             this.webSocket.send(
                 JSON.stringify({
                     action: 'onResult',
-                    message: { result: data, id: this.taskId },
+                    message: {
+                        result: data,
+                        id: this.taskId,
+                        token: this.token,
+                    },
                 })
             )
         }
