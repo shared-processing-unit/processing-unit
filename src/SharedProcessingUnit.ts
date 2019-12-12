@@ -1,55 +1,40 @@
-interface IWebsocket {
-    onopen: (ev: Event) => any
+export interface IWebsocket {
     send: (message: string) => void
-    onmessage: ({ data: string }) => void
+    onmessage: ({ data: string }) => Promise<void>
 }
 
 export default class SharedProcessingUnit {
-    private worker: Worker
-    private taskId: string
-    private token: string
     constructor(
         private readonly webSocket: IWebsocket,
         private readonly getData: (link: string) => Promise<string>
     ) {
-        if (!webSocket) {
+        if (!(webSocket && getData)) {
             throw new Error('InvalidArgumentException')
         }
     }
     public run() {
-        this.webSocket.onmessage = ({ data }) =>
-            this.runStrategy(JSON.parse(data))
-    }
-
-    private async runStrategy({ data, algorithm, taskId, token }) {
-        if (!(data && algorithm && taskId && token)) {
-            return
+        this.webSocket.onmessage = async message => {
+            const task = JSON.parse(message.data)
+            if (!(task.data && task.algorithm && task.taskId)) {
+                return
+            }
+            this.createWorker(task)
         }
-        this.taskId = taskId
-        this.token = token
-        this.worker && this.worker.terminate()
-        this.createWorker(await this.getData(algorithm))
-        this.defineOnMessage()
-        this.worker.postMessage(JSON.parse(await this.getData(data)))
     }
-
-    private defineOnMessage() {
-        this.worker.onmessage = ({ data }) => {
+    private async createWorker({ data, algorithm, taskId }) {
+        const blob = new Blob([await this.getData(algorithm)], {
+            type: 'application/javascript',
+        })
+        const worker = new Worker(URL.createObjectURL(blob))
+        worker.onmessage = ({ data }) => {
             this.webSocket.send(
                 JSON.stringify({
                     action: 'onResult',
-                    message: {
-                        result: data,
-                        id: this.taskId,
-                        token: this.token,
-                    },
+                    message: { result: data, taskId },
                 })
             )
+            worker.terminate()
         }
-    }
-
-    private async createWorker(algorithm: string) {
-        const blob = new Blob([algorithm], { type: 'application/javascript' })
-        this.worker = new Worker(URL.createObjectURL(blob))
+        worker.postMessage(JSON.parse(await this.getData(data)))
     }
 }
