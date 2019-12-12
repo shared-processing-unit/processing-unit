@@ -4,10 +4,10 @@
 
 .env-variable with the following field:
 
--   connection=wss-connection
+-   WebSocketURI=wss://f74mhycgbd.execute-api.eu-north-1.amazonaws.com/Prod
 
 example:
 
 ```
-    connection=ws://localhost:8080
+    WebSocketURI=ws://localhost:8080
 ```

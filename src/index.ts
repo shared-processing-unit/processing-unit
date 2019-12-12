@@ -4,7 +4,7 @@ const getData = async (link: string) => {
     const response = await fetch(link)
     return await response.text()
 }
-const webSocket = new WebSocket(process.env.connection)
+const webSocket = new WebSocket(process.env.WebSocketURI)
 const spu = new SharedProcessingUnit(webSocket, getData)
 
 spu.run()
