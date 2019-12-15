@@ -2,14 +2,10 @@
 
 [![Build Status](https://travis-ci.com/rkram3r/spu.processing-unit.svg?token=SeYH39q643bu3sRAgn3K&branch=master)](https://travis-ci.com/rkram3r/spu.processing-unit)
 
-## preconditions
+## Testing
 
-.env-variable with the following field:
+        $ yarn test
 
--   WebSocketURI=wss://f74mhycgbd.execute-api.eu-north-1.amazonaws.com/Prod
+## Prerequirements Deployment
 
-example:
-
-```
-    WebSocketURI=ws://localhost:8080
-```
+S3 Bucket which is specified in `.travis.yml` - script.
