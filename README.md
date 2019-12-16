@@ -10,4 +10,4 @@ Processing Units are actors usually provided by websites.
 
 ## Prerequirements Deployment
 
-S3 Bucket which is specified in `.travis.yml` - script.
+S3 Bucket and WebSocketURI which are specified in `.travis.yml` - script.
