@@ -1,7 +1,7 @@
 {
     "name": "spu.processing-unit",
     "version": "1.0.0",
-    "description": "",
+    "description": "Processing Units are actors usually provided by websites.",
     "main": "./src/index.ts",
     "scripts": {
         "test": "jest",

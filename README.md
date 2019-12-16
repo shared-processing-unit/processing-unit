@@ -1,13 +1,13 @@
-# spu.client
+# SPU-Processing-Unit
 
-## preconditions
+[![Build Status](https://travis-ci.com/rkram3r/spu.processing-unit.svg?token=SeYH39q643bu3sRAgn3K&branch=master)](https://travis-ci.com/rkram3r/spu.processing-unit)
 
-.env-variable with the following field:
+Processing Units are actors usually provided by websites.
 
--   WebSocketURI=wss://f74mhycgbd.execute-api.eu-north-1.amazonaws.com/Prod
+## Testing
 
-example:
+        $ yarn test
 
-```
-    WebSocketURI=ws://localhost:8080
-```
+## Prerequirements Deployment
+
+S3 Bucket which is specified in `.travis.yml` - script.
