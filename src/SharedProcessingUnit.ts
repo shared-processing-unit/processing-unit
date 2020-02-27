@@ -21,7 +21,7 @@ export default class SharedProcessingUnit {
             this.createWorker(task)
         }
     }
-    private async createWorker({ data, algorithm, taskId }) {
+    private async createWorker({ data, algorithm, taskId, options }) {
         const blob = new Blob([await this.getData(algorithm)], {
             type: 'application/javascript',
         })
@@ -35,6 +35,9 @@ export default class SharedProcessingUnit {
             )
             worker.terminate()
         }
-        worker.postMessage(JSON.parse(await this.getData(data)))
+        worker.postMessage({
+            data: JSON.parse(await this.getData(data)),
+            options: options && JSON.parse(options),
+        })
     }
 }
