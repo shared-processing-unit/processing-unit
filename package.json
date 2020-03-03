@@ -27,7 +27,9 @@
         "typescript": "^3.7.2"
     },
     "prettier": "@shared-processing-unit/prettier-config",
-    "dependencies": {},
+    "dependencies": {
+        "spu.models": "^1.0.1"
+    },
     "jest": {
         "preset": "ts-jest"
     }
