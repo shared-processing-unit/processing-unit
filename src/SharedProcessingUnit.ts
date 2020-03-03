@@ -21,7 +21,13 @@ export default class SharedProcessingUnit {
             this.createWorker(task)
         }
     }
-    private async createWorker({ data, algorithm, taskId, options }) {
+    private async createWorker({
+        data,
+        algorithm,
+        taskId,
+        options,
+        subtaskId,
+    }) {
         const blob = new Blob([await this.getData(algorithm)], {
             type: 'application/javascript',
         })
@@ -30,7 +36,7 @@ export default class SharedProcessingUnit {
             this.webSocket.send(
                 JSON.stringify({
                     action: 'onResult',
-                    message: { result: data, taskId },
+                    message: { result: data, taskId, subtaskId },
                 })
             )
             worker.terminate()
