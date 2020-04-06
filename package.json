@@ -18,6 +18,7 @@
     },
     "homepage": "https://github.com/rkram3r/client#readme",
     "devDependencies": {
+        "@shared-processing-unit/prettier-config": "^1.0.4",
         "@types/jest": "^24.0.23",
         "@types/node": "^12.12.14",
         "jest": "^24.9.0",
@@ -26,7 +27,7 @@
         "typescript": "^3.7.2"
     },
     "dependencies": {
-        "@rkram3r/spu-models": "^1.0.2"
+        "@shared-processing-unit/spu-models": "^1.0.4"
     },
     "jest": {
         "preset": "ts-jest"

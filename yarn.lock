@@ -1018,10 +1018,15 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@rkram3r/spu-models@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@rkram3r/spu-models/-/spu-models-1.0.2.tgz#072c44cda38d8e0614b2e61b0d5775996dbf9144"
-  integrity sha512-b3NRcNdHIIDH7doxIh3hJpRmy/Rq+qarXsgYncVju3LJRuIYGqaIjahfGiDQFexj9Omat77ByRA4PK/PeXawsw==
+"@shared-processing-unit/prettier-config@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@shared-processing-unit/prettier-config/-/prettier-config-1.0.4.tgz#835488e7c8a2ce55f98a8598435a197bbd9cb848"
+  integrity sha512-R/YHhhZPX2gvdaYGedfQLOyB6K1t5PMOEXF0aaERftfxFlO60bUZ0r4eSrfU1oioY2V/o22Kig6GBW6dndeKcA==
+
+"@shared-processing-unit/spu-models@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@shared-processing-unit/spu-models/-/spu-models-1.0.4.tgz#2d007d0654b2e1722c68dad8c0dd2cc3af954ada"
+  integrity sha512-4b07IbPAo8L2s0SLfjB/7qfhPkm8XTp4qhnf3zdLep5DCbeJ7q9vbkwlSVeXweIz4krwlZiSktUruVf/eDLGyw==
 
 "@types/babel__core@^7.1.0":
   version "7.1.3"
