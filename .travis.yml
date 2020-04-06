@@ -2,7 +2,7 @@ language: node_js
 node_js:
     - node
 env:
-    - WebSocketURI=wss://2n6lg0q0dd.execute-api.eu-north-1.amazonaws.com/Prod
+    - WebSocketURI=wss://8g3zju6pe2.execute-api.eu-central-1.amazonaws.com/Prod
 before_install:
     - export TZ=Europe/Zurich
 before_deploy: yarn build
@@ -17,4 +17,4 @@ deploy:
     region: eu-north-1
     local_dir: dist
     on:
-        repo: rkram3r/spu.processing-unit
+        repo: rkram3r/spu-processing-unit

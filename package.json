@@ -1,5 +1,5 @@
 {
-    "name": "spu.processing-unit",
+    "name": "spu-processing-unit",
     "version": "1.0.0",
     "description": "Processing Units are actors usually provided by websites.",
     "main": "./src/index.ts",
@@ -18,7 +18,6 @@
     },
     "homepage": "https://github.com/rkram3r/client#readme",
     "devDependencies": {
-        "@shared-processing-unit/prettier-config": "^1.0.3",
         "@types/jest": "^24.0.23",
         "@types/node": "^12.12.14",
         "jest": "^24.9.0",
@@ -26,9 +25,8 @@
         "ts-jest": "^24.2.0",
         "typescript": "^3.7.2"
     },
-    "prettier": "@shared-processing-unit/prettier-config",
     "dependencies": {
-        "spu.models": "^1.0.1"
+        "@rkram3r/spu-models": "^1.0.2"
     },
     "jest": {
         "preset": "ts-jest"
