@@ -26,6 +26,7 @@ export default class SharedProcessingUnit {
         }
     }
     private async createWorker(subTask: SubTask) {
+        console.log(subTask)
         const { taskId, subtaskId, data, options, algorithm } = subTask
         const blob = new Blob([await this.getData(algorithm)], {
             type: 'application/javascript'
