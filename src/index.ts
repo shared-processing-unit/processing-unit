@@ -4,7 +4,6 @@ const getData = async (link: string) => {
     const response = await fetch(link, {
         headers: { 'Content-Type': 'application/json;charset=UTF-8' }
     })
-    console.log(response, link)
     return await response.text()
 }
 

@@ -16,7 +16,6 @@ export default class SharedProcessingUnit {
     }
     public run() {
         this.webSocket.onmessage = async message => {
-            console.log(message)
             const task = JSON.parse(message.data)
             if (!(task.data && task.algorithm && task.taskId)) {
                 console.error(`wrong format! ${task}`)
@@ -26,7 +25,6 @@ export default class SharedProcessingUnit {
         }
     }
     private async createWorker(subTask: SubTask) {
-        console.log(subTask)
         const { taskId, subtaskId, data, options, algorithm } = subTask
         const blob = new Blob([await this.getData(algorithm)], {
             type: 'application/javascript'
@@ -42,7 +40,6 @@ export default class SharedProcessingUnit {
             worker.terminate()
         }
         const dataAsString = await this.getData(data)
-        console.log(dataAsString)
         worker.postMessage({
             data: JSON.parse(dataAsString),
             options: options && JSON.parse(options)
