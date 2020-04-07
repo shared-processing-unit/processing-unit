@@ -16,6 +16,7 @@ export default class SharedProcessingUnit {
     }
     public run() {
         this.webSocket.onmessage = async message => {
+            console.log(message)
             const task = JSON.parse(message.data)
             if (!(task.data && task.algorithm && task.taskId)) {
                 console.error(`wrong format! ${task}`)
