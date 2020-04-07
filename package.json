@@ -5,7 +5,7 @@
     "main": "./src/index.ts",
     "scripts": {
         "test": "jest",
-        "build": "parcel build ./src/index.ts --experimental-scope-hoisting"
+        "build": "parcel build ./src/index.ts"
     },
     "repository": {
         "type": "git",
