@@ -1,17 +1,17 @@
 language: node_js
 node_js:
-- node
+    - node
 env:
-- WebSocketURI=wss://86ptxamja5.execute-api.eu-central-1.amazonaws.com/Prod
+    - WebSocketURI=wss://86ptxamja5.execute-api.eu-central-1.amazonaws.com/Prod
 before_install:
-- export TZ=Europe/Zurich
+    - export TZ=Europe/Zurich
 before_deploy: yarn build
 deploy:
-provider: s3
-    access_key_id: AKIASUS73RVHIMYZQ3O5
-  secret_access_key:
-    secure: dvN4ZM5tkeeAyjudm3GaIaOElkYcoFU0hjBlpZgBknObf4H4K3U2WLAawF0iKdCHvkFNo9rdtTgLybpCN3KREtsRt4T5KenS0fYZsAVzorHvNCOoNfM2K/0yGvsbs6ZydSgdaz+n3PvebStw/Z957q7LDsgK6Xcd+2SeArg62GkT5SJJGzQhMuGhcYNu4gR6N/YyUY06t98e9lOjXR6R36xSYm54pCV1LvkqpWovTl+8rUaOSP9ev0y0thxC/cokTDBOyBDXFaRcAsr8epdZyTjsh1E1xa46Ljcjtu+UtcfIO0oJSHAYWzTIsU5NL3USGJLuID85rPUmwHXowsFF14cbxuUNmte9laKZSfqf/ZGNj2gipEdDG2nhrIcbK4M0KQ09clm6X9IalWhgGIiwAsuQeCD0r+Ag1suQg2C2JPh5308YboafCezVC7SS0V+xqTYS6hEaVZNs02My43uuGT66GzCwRjzkwK3u1J4bZ3gsRQCKR20uvbmmxNkavLdlEUrhlnIdiN82GlVA1qmF1KGiZSxPY1F0RUkg2mpgPZNHr4hEJ40JHvio8Ugb23JLd8HlEJDUF7NLt2x2wgOVT+16fAlS7jBcXZ/fEiwYExh4+Lgh2vnIR7bd5oUZOkNWUzKzcXpMUL/799oKR0dYN9KVfiK6yQJASX6QCvp7Iz4=
-       bucket: processing-unit
+    provider: s3
+    access_key_id: AKIASUS73RVHABZMCGGS
+    secret_access_key:
+        secure: kEGcvc0a+mA3ry5tJOyxJoZTJmCAd+LVPJ3hUc7cuSYYxB94l5gFgOYzKmleybzEFXg79dsHbwNAza4p1BMPtcvhjcEOWOuoESCCWv33jl6vB9ACjXjcC2ZAhTTIZkzvK/wdDCUwkXgCzxMqh9vl7dYjob+FYybdlgNihDjv9lxkLKRFv+HHUprk9aKPIqHVDt3Xpt8eGuLnQzCW9rmII77ryR+yNCjwcBeCKockBFezNyIxq+J0PzJlUX55dAAPiki8ve3rfdB96mYLx95FVdtsdNDDdf78RoIArr8adeSPtrA98xSrzdZMGcykxvCQo4Tzx+zHMrlQpmB7lGm05p/7HmPqtztfCOVyMLeq4wVSg7LjxSs9dQ8LsPcrQoCN3N82EMYKA7xfFYRkIhvxsGKigmSsk3tLMiEkr5LNdrCHaqH67NgxExKG8vVqzMXD7CXFEUlT9vLG2vudmzKDzKUP+Lj+jifayQ0RcRiMf6LJ+0n/K5iTGNKefBsCGnjMbBRBhep53asKFW3I0OGOpkUlP/AF/qECd772tD7cmSxppd3M9TpejFPfh7PPKj0VgHnMLwbgrP3BbYhTNzx97vYHA4ObT9UQ24lWLAAd1eDemvvxi2vScRt13HeRru+hxZ0pf2N8zLsUEPcnkpB5UOgvvVt1uMmWdhB+8Gb9vuM=
+    bucket: processing-unit
     acl: public_read
     skip_cleanup: true
     region: eu-north-1
