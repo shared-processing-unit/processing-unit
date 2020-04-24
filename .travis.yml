@@ -2,7 +2,7 @@ language: node_js
 node_js:
     - node
 env:
-    - WebSocketURI=wss://pjwh55utd2.execute-api.eu-central-1.amazonaws.com/SPU
+    - WebSocketURI=wss://lyzwzj7hn0.execute-api.eu-central-1.amazonaws.com/SPU
 before_install:
     - export TZ=Europe/Zurich
 before_deploy: yarn build
