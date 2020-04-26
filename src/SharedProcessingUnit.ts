@@ -2,7 +2,7 @@ import SubtaskDto from '@shared-processing-unit/spu-models/dist/SubtaskDto'
 
 export interface IWebsocket {
     send: (message: string) => void
-    onmessage: ({ data: string }) => Promise<void>
+    onmessage: ({ data: {} }) => Promise<void>
 }
 
 export default class SharedProcessingUnit {
@@ -16,7 +16,7 @@ export default class SharedProcessingUnit {
     }
     public run() {
         this.webSocket.onmessage = async message => {
-            const task = JSON.parse(message.data)
+            const task = JSON.parse(message.data as string)
             if (!(task.dataset && task.algorithm)) {
                 console.error(`wrong format! ${JSON.stringify(task)}`)
                 return

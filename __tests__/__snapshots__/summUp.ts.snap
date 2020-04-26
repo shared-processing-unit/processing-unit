@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`summUp [[1, 1, 6, 0], [1, 2, 3, -4]] should be equals 10 1`] = `10`;
+
+exports[`summUp [[1, 1, 6, 0], [1, 2, 3, 4]] should be equals 18 1`] = `18`;
+
+exports[`summUp [1,1,6,0] should be equals 8 1`] = `8`;
+
+exports[`summUp [1,1] should be equals 2 1`] = `2`;

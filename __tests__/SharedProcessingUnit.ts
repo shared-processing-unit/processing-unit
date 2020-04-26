@@ -2,6 +2,7 @@ import SharedProcessingUnit from '../src/SharedProcessingUnit'
 
 describe('SharedProcessingUnit', () => {
     test('Invalid parameters should throw an exception.', () => {
+        //@ts-ignore
         expect(() => new SharedProcessingUnit(null, null)).toThrowError()
     })
     test('webSocket should be defined.', () => {
@@ -9,11 +10,13 @@ describe('SharedProcessingUnit', () => {
             () =>
                 new SharedProcessingUnit(
                     { onmessage: jest.fn(), send: jest.fn() },
+                    //@ts-ignore
                     null
                 )
         ).toThrowError()
     })
     test('getdata should be defined', () => {
+        //@ts-ignore
         expect(() => new SharedProcessingUnit(null, jest.fn())).toThrowError()
     })
     test('run should do nothing, if message is invalid', () => {
@@ -25,8 +28,8 @@ describe('SharedProcessingUnit', () => {
         websocket.onmessage({
             data: JSON.stringify({
                 data: 'data',
-                algorithm: 'algorithm',
-            }),
+                algorithm: 'algorithm'
+            })
         })
         //@ts-ignore
         expect(spu.createWorker).not.toBeCalled()
@@ -40,10 +43,10 @@ describe('SharedProcessingUnit', () => {
         spu.run()
         websocket.onmessage({
             data: JSON.stringify({
-                data: 'data',
+                dataset: 'data',
                 algorithm: 'algorithm',
-                taskId: 'taskId',
-            }),
+                subtaskId: 'subtaskId'
+            })
         })
         //@ts-ignore
         expect(spu.createWorker).toBeCalled()

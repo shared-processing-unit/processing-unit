@@ -5,7 +5,11 @@
     "main": "./src/index.ts",
     "scripts": {
         "test": "jest",
-        "build": "parcel build ./src/index.ts"
+        "build": "yarn build:SPU && yarn build:summUp && yarn build:bestSplit && yarn build:decisionTree",
+        "build:summUp": "parcel build ./src/SummUpWorker.ts",
+        "build:bestSplit": "parcel build ./src/BestSplitWorker.ts",
+        "build:decisionTree": "parcel build ./src/DecisionTreeWorker.ts",
+        "build:SPU": "parcel build ./src/index.ts"
     },
     "repository": {
         "type": "git",
@@ -30,6 +34,10 @@
         "@shared-processing-unit/spu-models": "^1.0.4"
     },
     "jest": {
-        "preset": "ts-jest"
+        "preset": "ts-jest",
+        "testPathIgnorePatterns": [
+            "<rootDir>/node_modules/",
+            "<rootDir>/__tests__/data"
+        ]
     }
 }
