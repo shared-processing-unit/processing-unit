@@ -1,4 +1,4 @@
-import SubTask from '@shared-processing-unit/spu-models/dist/SubTask'
+import SubtaskDto from '@shared-processing-unit/spu-models/dist/SubtaskDto'
 
 export interface IWebsocket {
     send: (message: string) => void
@@ -24,8 +24,8 @@ export default class SharedProcessingUnit {
             this.createWorker(task)
         }
     }
-    private async createWorker(subTask: SubTask) {
-        const { taskId, subtaskId, data, options, algorithm } = subTask
+    private async createWorker(subTask: SubtaskDto) {
+        const { subtaskId, dataset, options, algorithm } = subTask
         const blob = new Blob([await this.getData(algorithm)], {
             type: 'application/javascript'
         })
@@ -34,12 +34,12 @@ export default class SharedProcessingUnit {
             this.webSocket.send(
                 JSON.stringify({
                     action: 'onResult',
-                    message: { result: data, taskId, subtaskId }
+                    message: { result: data, subtaskId }
                 })
             )
             worker.terminate()
         }
-        const dataAsString = await this.getData(data)
+        const dataAsString = await this.getData(dataset)
         worker.postMessage({
             data: JSON.parse(dataAsString),
             options: options && JSON.parse(options)
