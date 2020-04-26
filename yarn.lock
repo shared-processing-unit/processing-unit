@@ -1013,9 +1013,9 @@
   integrity sha512-R/YHhhZPX2gvdaYGedfQLOyB6K1t5PMOEXF0aaERftfxFlO60bUZ0r4eSrfU1oioY2V/o22Kig6GBW6dndeKcA==
 
 "@shared-processing-unit/spu-models@^1.0.4":
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/@shared-processing-unit/spu-models/-/spu-models-1.1.6.tgz#4efc6254c0f0b0223e19ea28d4c5f3784133b79e"
-  integrity sha512-tKLt51fGH5Xe5A/d6Zv8jB+e1I99zuJ92QSNvx5gZWwH76veWDaAoXUGsauEXxTKl2l+OVH/cbwZmsuAn59ZoQ==
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/@shared-processing-unit/spu-models/-/spu-models-1.1.7.tgz#e7af6181e0f45475f0651ad8ee790e5eefb3d8ae"
+  integrity sha512-ZQYPD8CVe2hiJ3CW8U5e/PSt/XPIpelzQogbp7Ajm+RZyB4z/TrnYsWMkQoqE2tdJEDoplaKgH9fDWdsGsBjxQ==
 
 "@types/babel__core@^7.1.0":
   version "7.1.7"
