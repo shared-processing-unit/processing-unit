@@ -17,10 +17,6 @@
     },
     "author": "Dijan Helbling, Roman Kramer",
     "license": "AGPL-3.0-only",
-    "bugs": {
-        "url": "https://github.com/rkram3r/client/issues"
-    },
-    "homepage": "https://github.com/rkram3r/client#readme",
     "devDependencies": {
         "@shared-processing-unit/prettier-config": "^1.0.4",
         "@types/jest": "^24.0.23",
