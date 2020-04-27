@@ -35,10 +35,7 @@ export default class SharedProcessingUnit {
                 console.log(subTask)
                 const result = await fetch(resultLink, {
                     body: data,
-                    headers: {
-                        method: 'POST',
-                        type: 'application/javascript'
-                    }
+                    headers: { method: 'PUT' }
                 })
                 console.log(result)
                 this.webSocket.send(
