@@ -32,7 +32,7 @@ export default class SharedProcessingUnit {
         const worker = new Worker(URL.createObjectURL(blob))
         worker.onmessage = async ({ data }) => {
             try {
-                console.log(subTask, data, subTask.resultLink)
+                console.log(subTask, data, subTask.resultLink, fetch)
                 const result = await fetch(resultLink, {
                     body: JSON.stringify(data),
                     headers: {
