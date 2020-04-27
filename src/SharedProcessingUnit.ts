@@ -35,10 +35,7 @@ export default class SharedProcessingUnit {
                 console.log(subTask, data, subTask.resultLink, fetch)
                 const result = await fetch(resultLink, {
                     body: JSON.stringify(data),
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    method: 'PUT'
                 })
                 console.log(result)
                 this.webSocket.send(
