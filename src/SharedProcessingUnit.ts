@@ -36,6 +36,7 @@ export default class SharedProcessingUnit {
                 const result = await fetch(resultLink, {
                     body: data,
                     headers: {
+                        method: 'POST',
                         type: 'application/javascript'
                     }
                 })
