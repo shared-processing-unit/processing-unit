@@ -34,7 +34,7 @@ export default class SharedProcessingUnit {
             try {
                 console.log(subTask, data, subTask.resultLink)
                 const result = await fetch(resultLink, {
-                    body: data,
+                    body: JSON.stringify(data),
                     headers: {
                         method: 'PUT',
                         'Content-Type': 'application/json'
