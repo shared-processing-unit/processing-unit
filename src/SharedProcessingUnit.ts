@@ -32,12 +32,10 @@ export default class SharedProcessingUnit {
         const worker = new Worker(URL.createObjectURL(blob))
         worker.onmessage = async ({ data }) => {
             try {
-                console.log(subTask, data, subTask.resultLink, fetch)
-                const result = await fetch(resultLink, {
+                await fetch(resultLink, {
                     body: JSON.stringify(data),
                     method: 'PUT'
                 })
-                console.log(result)
                 this.webSocket.send(
                     JSON.stringify({
                         action: 'onResult',
