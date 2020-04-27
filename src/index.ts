@@ -1,4 +1,4 @@
-import SharedProcessingUnit from './SharedProcessingUnit'
+import SharedProcessingUnit, { IWebsocket } from './SharedProcessingUnit'
 
 const getData = async (link: string) => {
     const response = await fetch(link, {
@@ -7,7 +7,9 @@ const getData = async (link: string) => {
     return await response.text()
 }
 
-const webSocket = new WebSocket(process.env.WebSocketURI)
+const webSocket = (new WebSocket(
+    process.env.WebSocketURI as string
+) as unknown) as IWebsocket
 const spu = new SharedProcessingUnit(webSocket, getData)
 
 spu.run()

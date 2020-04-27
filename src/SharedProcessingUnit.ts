@@ -25,19 +25,32 @@ export default class SharedProcessingUnit {
         }
     }
     private async createWorker(subTask: SubtaskDto) {
-        const { subtaskId, dataset, options, algorithm } = subTask
+        const { subtaskId, dataset, options, algorithm, resultLink } = subTask
         const blob = new Blob([await this.getData(algorithm)], {
             type: 'application/javascript'
         })
         const worker = new Worker(URL.createObjectURL(blob))
-        worker.onmessage = ({ data }) => {
-            this.webSocket.send(
-                JSON.stringify({
-                    action: 'onResult',
-                    message: { result: data, subtaskId }
+        worker.onmessage = async ({ data }) => {
+            try {
+                console.log(subTask)
+                const result = await fetch(resultLink, {
+                    body: data,
+                    headers: {
+                        type: 'application/javascript'
+                    }
                 })
-            )
-            worker.terminate()
+                console.log(result)
+                this.webSocket.send(
+                    JSON.stringify({
+                        action: 'onResult',
+                        message: { result: data, subtaskId }
+                    })
+                )
+            } catch (error) {
+                console.error(error)
+            } finally {
+                worker.terminate()
+            }
         }
         const dataAsString = await this.getData(dataset)
         worker.postMessage({
