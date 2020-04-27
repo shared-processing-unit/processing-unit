@@ -39,7 +39,7 @@ export default class SharedProcessingUnit {
                 this.webSocket.send(
                     JSON.stringify({
                         action: 'onResult',
-                        message: { result: data, subtaskId }
+                        message: { subtaskId }
                     })
                 )
             } catch (error) {
