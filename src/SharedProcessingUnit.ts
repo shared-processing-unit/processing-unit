@@ -24,6 +24,14 @@ export default class SharedProcessingUnit {
             this.createWorker(task)
         }
     }
+    private send(subtaskId: string, error?: string) {
+        this.webSocket.send(
+            JSON.stringify({
+                action: 'onResult',
+                message: { subtaskId, error }
+            })
+        )
+    }
     private async createWorker(subTask: SubtaskDto) {
         const { subtaskId, dataset, options, algorithm, resultLink } = subTask
         const blob = new Blob([await this.getData(algorithm)], {
@@ -36,23 +44,17 @@ export default class SharedProcessingUnit {
                     body: JSON.stringify(data),
                     method: 'PUT'
                 })
-                this.webSocket.send(
-                    JSON.stringify({ action: 'onResult', message: subtaskId })
-                )
+                this.send(subtaskId)
             } catch (error) {
                 console.error(error)
+                this.send(subtaskId, error)
             } finally {
                 worker.terminate()
             }
         }
         worker.onerror = async ({ message }) => {
             console.error(message)
-            this.webSocket.send(
-                JSON.stringify({
-                    action: 'onError',
-                    message: { subtaskId, error: message }
-                })
-            )
+            this.send(subtaskId, message)
         }
         const data = await this.getData(dataset)
         worker.postMessage({ data, options: options && JSON.parse(options) })
