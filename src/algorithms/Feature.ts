@@ -1,5 +1,5 @@
 export const createFilter = (feature: Feature, splitOn: number) => {
-    return new Set(feature.ref.slice(0, splitOn))
+    return new Set(feature.indexes.slice(0, splitOn))
 }
 
 export const distinctYSize = ({ refY }: Feature) => {
@@ -13,29 +13,31 @@ export const filterRight = (feature: Feature, refToFilter: Set<number>) => {
     return applyFilter(feature, refToFilter, false)
 }
 const applyFilter = (
-    { id, refY, ref }: Feature,
+    { featureId, refY, indexes }: Feature,
     refToFilter: Set<number>,
     left: boolean
 ) => {
     const filter = new Set(
-        ref
+        indexes
             .map((value, key) => [key, value] as [number, number])
             .filter(([, value]) => refToFilter.has(value))
             .map(([key]) => key)
     )
+    const filterOut = <T>(array: T[]) =>
+        array.filter((_, key) => (left ? filter.has(key) : !filter.has(key)))
+
     return {
-        ref: ref.filter((_, key) =>
-            left ? filter.has(key) : !filter.has(key)
-        ),
-        refY: refY.filter((_, key) =>
-            left ? filter.has(key) : !filter.has(key)
-        ),
-        id,
-    }
+        indexes: filterOut(indexes),
+        refY: filterOut(refY),
+        featureId
+    } as Feature
 }
 
 export default interface Feature {
-    readonly ref: number[]
-    readonly refY: number[]
-    readonly id: number
+    readonly indexes: number[]
+    readonly refY: Entries
+    readonly featureId: number
 }
+
+export type Entry = number | string
+export type Entries = Entry[]

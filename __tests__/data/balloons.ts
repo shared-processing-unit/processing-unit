@@ -1,62 +1,45 @@
 export const balloonsX = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 1],
-    [0, 0, 1, 0],
-    [0, 0, 1, 1],
-    [0, 0, 1, 1],
-    [0, 1, 0, 0],
-    [0, 1, 0, 1],
-    [0, 1, 1, 0],
-    [0, 1, 1, 1],
-    [0, 1, 1, 1],
-    [1, 0, 0, 0],
-    [1, 0, 0, 1],
-    [1, 0, 1, 0],
-    [1, 0, 1, 1],
-    [1, 0, 1, 1],
-    [1, 1, 0, 0],
-    [1, 1, 0, 1],
-    [1, 1, 1, 0],
-    [1, 1, 1, 1],
-    [1, 1, 1, 1],
+    ['YELLOW', 'SMALL', 'STRETCH', 'ADULT'],
+    ['YELLOW', 'SMALL', 'STRETCH', 'CHILD'],
+    ['YELLOW', 'SMALL', 'DIP', 'ADULT'],
+    ['YELLOW', 'SMALL', 'DIP', 'CHILD'],
+    ['YELLOW', 'SMALL', 'DIP', 'CHILD'],
+    ['YELLOW', 'LARGE', 'STRETCH', 'ADULT'],
+    ['YELLOW', 'LARGE', 'STRETCH', 'CHILD'],
+    ['YELLOW', 'LARGE', 'DIP', 'ADULT'],
+    ['YELLOW', 'LARGE', 'DIP', 'CHILD'],
+    ['YELLOW', 'LARGE', 'DIP', 'CHILD'],
+    ['PURPLE', 'SMALL', 'STRETCH', 'ADULT'],
+    ['PURPLE', 'SMALL', 'STRETCH', 'CHILD'],
+    ['PURPLE', 'SMALL', 'DIP', 'ADULT'],
+    ['PURPLE', 'SMALL', 'DIP', 'CHILD'],
+    ['PURPLE', 'SMALL', 'DIP', 'CHILD'],
+    ['PURPLE', 'LARGE', 'STRETCH', 'ADULT'],
+    ['PURPLE', 'LARGE', 'STRETCH', 'CHILD'],
+    ['PURPLE', 'LARGE', 'DIP', 'ADULT'],
+    ['PURPLE', 'LARGE', 'DIP', 'CHILD'],
+    ['PURPLE', 'LARGE', 'DIP', 'CHILD']
 ]
 
 export const balloonsY = [
-    0,
-    0,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
+    'T',
+    'T',
+    'T',
+    'F',
+    'F',
+    'T',
+    'T',
+    'T',
+    'F',
+    'F',
+    'T',
+    'T',
+    'T',
+    'F',
+    'F',
+    'T',
+    'T',
+    'T',
+    'F',
+    'F'
 ]
-
-export default () => {
-    const transposed = balloonsX[0].map((_, columnIndex) => {
-        return balloonsX.map((_, rowIndex) => balloonsX[rowIndex][columnIndex])
-    })
-    return transposed.map((column, id) => {
-        const feature = column
-            .map((value, index) => ({ value, index }))
-            .sort((cell1, cell2) => cell1.value - cell2.value)
-            .map((cell) => ({ refY: balloonsY[cell.index], index: cell.index }))
-        return {
-            ref: feature.map((f) => f.index),
-            refY: feature.map((f) => f.refY),
-            id,
-        }
-    })
-}

@@ -6,3 +6,9 @@ export const vectorAdd = (left: number[], right: number[]) => {
         return index === left.length - 1 ? entry : entry + right[index + 1]
     })
 }
+
+export const transpose = <T>(data: Array<T[]>) => {
+    return data[0].map((_, columnIndex) =>
+        data.map((_, rowIndex) => data[rowIndex][columnIndex])
+    )
+}

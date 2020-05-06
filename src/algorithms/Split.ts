@@ -1,7 +1,7 @@
 import Feature from './Feature'
 import { reverse, vectorAdd } from './matrixHelper'
 
-export const evaluate = (data: number[]) => {
+export const evaluate = <T>(data: T[]) => {
     const ginis = vectorAdd(
         weightedGinies(data),
         weightedGinies(reverse(data)).reverse()
@@ -10,8 +10,8 @@ export const evaluate = (data: number[]) => {
     return { splitOn: ginis.indexOf(value), value }
 }
 
-const weightedGinies = (data: number[]) => {
-    const occurences = new Map<number, number>()
+const weightedGinies = <T>(data: T[]) => {
+    const occurences = new Map<T, number>()
     return data.map((category, i) => {
         const occurence = occurences.get(category) || 0
         occurences.set(category, occurence + 1)
@@ -32,8 +32,8 @@ export default class Split {
         public readonly splitOn: number,
         feature: Feature
     ) {
-        this.featureIndex = feature.id
-        this.index1 = feature.ref[splitOn]
-        this.index2 = feature.ref[splitOn + 1]
+        this.featureIndex = feature.featureId
+        this.index1 = feature.indexes[splitOn]
+        this.index2 = feature.indexes[splitOn + 1]
     }
 }

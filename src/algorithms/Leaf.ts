@@ -1,27 +1,25 @@
 import Split from './Split'
-import Feature from './Feature'
+import Feature, { Entry, Entries } from './Feature'
 
 export default class Leaf {
-    public readonly category: number
-    public readonly samples: Array<[number, number]>
+    public readonly category: Entry
+    public readonly samples: Array<[Entry, number]>
     public readonly split?: Split
 
     constructor(feature: Feature, split?: Split) {
-        const samples = this.getSamples(feature.refY)
-        const category = this.getCategory(samples)
-        this.category = category
-        this.samples = samples
+        this.samples = this.getSamples(feature.refY)
+        this.category = this.getCategory(this.samples)
         split && (this.split = split)
     }
-    private getSamples(data: number[]) {
+    private getSamples(data: Entries) {
         return Array.from(
             data.reduce((occurences, category) => {
                 const occurence = occurences.get(category) || 0
                 return occurences.set(category, occurence + 1)
-            }, new Map<number, number>())
+            }, new Map<Entry, number>())
         )
     }
-    private getCategory(value: [number, number][]) {
+    private getCategory(value: [Entry, number][]) {
         const mostOccurentCategory = Math.max(...value.map(([, o]) => o))
         const [[category]] = value.filter(([, o]) => o === mostOccurentCategory)
         return category
