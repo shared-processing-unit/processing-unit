@@ -48,6 +48,15 @@ export default class SharedProcessingUnit {
                 worker.terminate()
             }
         }
+        worker.onerror = async ({ message }) => {
+            console.error(message)
+            this.webSocket.send(
+                JSON.stringify({
+                    action: 'onError',
+                    message: { subtaskId, error: message }
+                })
+            )
+        }
         const data = await this.getData(dataset)
         worker.postMessage({ data, options: options && JSON.parse(options) })
     }
