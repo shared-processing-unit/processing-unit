@@ -21,7 +21,5 @@ export const parseCSV = (csv: string, delimiter: string = ',') => {
 }
 
 self.onmessage = ({ data: { data, options } }: MessageEvent) => {
-    const features = parseCSV(data)
-    console.log(JSON.stringify(features))
-    self.postMessage(decisionTree(features, options))
+    self.postMessage(decisionTree(parseCSV(data), options))
 }
