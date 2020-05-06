@@ -48,10 +48,7 @@ export default class SharedProcessingUnit {
                 worker.terminate()
             }
         }
-        const dataAsString = await this.getData(dataset)
-        worker.postMessage({
-            data: JSON.parse(dataAsString),
-            options: options && JSON.parse(options)
-        })
+        const data = await this.getData(dataset)
+        worker.postMessage({ data, options: options && JSON.parse(options) })
     }
 }
