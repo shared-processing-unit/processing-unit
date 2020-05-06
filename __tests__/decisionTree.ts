@@ -44,6 +44,7 @@ describe('createTree', () => {
     })
 })
 
+//todo refactor
 const predict = (
     test: Entries,
     dt: Node<Leaf>,
