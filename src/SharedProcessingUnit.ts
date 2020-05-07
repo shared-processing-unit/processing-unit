@@ -6,6 +6,7 @@ export interface IWebsocket {
 }
 
 export default class SharedProcessingUnit {
+    private worker?: Worker
     constructor(
         private readonly webSocket: IWebsocket,
         private readonly getData: (link: string) => Promise<string>
@@ -16,7 +17,12 @@ export default class SharedProcessingUnit {
     }
     public run() {
         this.webSocket.onmessage = async message => {
+            if (this.worker) {
+                console.log('cannot start new worker, still running.')
+                return
+            }
             const task = JSON.parse(message.data as string)
+            console.log(task)
             if (!(task.dataset && task.algorithm)) {
                 console.error(`wrong format! ${JSON.stringify(task)}`)
                 return
@@ -37,8 +43,8 @@ export default class SharedProcessingUnit {
         const blob = new Blob([await this.getData(algorithm)], {
             type: 'application/javascript'
         })
-        const worker = new Worker(URL.createObjectURL(blob))
-        worker.onmessage = async ({ data }) => {
+        this.worker = new Worker(URL.createObjectURL(blob))
+        this.worker.onmessage = async ({ data }) => {
             try {
                 await fetch(resultLink, {
                     body: JSON.stringify(data),
@@ -49,14 +55,20 @@ export default class SharedProcessingUnit {
                 console.error(error)
                 this.send(subtaskId, error)
             } finally {
-                worker.terminate()
+                this.worker && this.worker.terminate()
+                this.worker = undefined
             }
         }
-        worker.onerror = async ({ message }) => {
+        this.worker.onerror = async ({ message }) => {
             console.error(message)
             this.send(subtaskId, message)
+            this.worker && this.worker.terminate()
+            this.worker = undefined
         }
         const data = await this.getData(dataset)
-        worker.postMessage({ data, options: options && JSON.parse(options) })
+        this.worker.postMessage({
+            data,
+            options: options && JSON.parse(options)
+        })
     }
 }
