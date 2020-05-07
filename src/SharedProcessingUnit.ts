@@ -23,7 +23,6 @@ export default class SharedProcessingUnit {
             }
             this.locked = true
             const task = JSON.parse(message.data as string)
-            console.log(task)
             if (!(task.dataset && task.algorithm)) {
                 console.error(`wrong format! ${JSON.stringify(task)}`)
                 return
