@@ -6,6 +6,7 @@ export interface IWebsocket {
 }
 
 export default class SharedProcessingUnit {
+    private locked: boolean = false
     constructor(
         private readonly webSocket: IWebsocket,
         private readonly getData: (link: string) => Promise<string>
@@ -16,7 +17,13 @@ export default class SharedProcessingUnit {
     }
     public run() {
         this.webSocket.onmessage = async message => {
+            if (this.locked) {
+                console.log('cannot start new worker, still running.')
+                return
+            }
+            this.locked = true
             const task = JSON.parse(message.data as string)
+            console.log(task)
             if (!(task.dataset && task.algorithm)) {
                 console.error(`wrong format! ${JSON.stringify(task)}`)
                 return
@@ -50,13 +57,19 @@ export default class SharedProcessingUnit {
                 this.send(subtaskId, error)
             } finally {
                 worker.terminate()
+                this.locked = false
             }
         }
         worker.onerror = async ({ message }) => {
             console.error(message)
             this.send(subtaskId, message)
+            worker && worker.terminate()
+            this.locked = false
         }
         const data = await this.getData(dataset)
-        worker.postMessage({ data, options: options && JSON.parse(options) })
+        worker.postMessage({
+            data,
+            options: options && JSON.parse(options)
+        })
     }
 }
