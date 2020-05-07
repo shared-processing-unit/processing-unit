@@ -18,7 +18,7 @@ export default class SharedProcessingUnit {
     public run() {
         this.webSocket.onmessage = async message => {
             if (this.locked) {
-                console.log('cannot start new worker, still running.')
+                console.log('cannot start new worker, still running.', message)
                 return
             }
             this.locked = true
