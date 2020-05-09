@@ -1,26 +1,30 @@
 import { transpose } from '../src/algorithms/matrixHelper'
 
-const extractXandAnonymizedY = (csv: [][]) => {
-    const data = transpose(csv)
+const anonymize = (data: []) => {
+    const sorted = [...data].sort((a, b) => `${a}`.localeCompare(`${b}`))
+    const distinct = Array.from(new Set(sorted))
+    return data.map(value => distinct.indexOf(value))
+}
+
+const anonymizeMatrix = (csv: [][]) => {
+    const data = transpose(csv).map(row => anonymize(row as []))
     const [Y] = data.slice(-1)
-    const sortedY = [...Y].sort((a, b) => `${a}`.localeCompare(`${b}`))
-    const distinctY = new Set(sortedY)
-    const anonymizedY = new Map(
-        Array.from(distinctY).map((name, key) => [name, key])
-    )
     const X = data.slice(0, -1)
-    return [transpose(X), Y.map(y => Number.parseInt(`${anonymizedY.get(y)}`))]
+    return [X, Y] as [[][], []]
 }
 
 export const createCsvReferenceTable = (csv: []) => {
-    const [X, Y] = extractXandAnonymizedY(csv) as [[][], []]
-    const transposed = transpose(X)
-    const matrix = transposed.map(column =>
-        column
-            .map((value, refX) => ({ value: `${value}`, refX }))
-            .sort(({ value }, cell2) => value.localeCompare(cell2.value))
-            .map(({ refX }) => `${refX},${Y[refX]}`)
-    )
+    const [X, Y] = anonymizeMatrix(csv)
+    const matrix = X.map(column => {
+        const sorted = column
+            .map((value, refX) => ({ value, refX }))
+            .sort(({ value }, cell2) => `${value}`.localeCompare(cell2.value))
+        const anonymized = anonymize(sorted.map(({ value }) => value) as [])
+        return sorted.map(({ refX, value }) => {
+            const distinctRef = sorted[anonymized.indexOf(value)]
+            return `${distinctRef.refX},${Y[refX]}`
+        })
+    })
     return transpose(matrix).join('\n')
 }
 
