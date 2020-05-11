@@ -1,46 +1,34 @@
 import {
-    createCsvReferenceTable,
-    createRandomCSVChunks
+    createDecisionTreeSample,
+    splitDecisionTreeSampleIntoNEstimators,
+    ReferenceTpe
 } from '../scripts/prepareDataset'
 describe('prepare dataset', () => {
-    it('create reference table', async () => {
-        const matrix = [
-            [1, 3, 'A'],
-            [8, 2, 'B'],
-            [7.9, 3, 'B'],
-            [8.1, 1, 'A']
+    const referenceTable = [
+        [
+            { refX: 2, comperativeValue: 2, y: 1 },
+            { refX: 0, comparativeValue: 0, y: 1 },
+            { refX: 1, comparativeValue: 0, y: 0 },
+            { refX: 3, comparativeValue: 0, y: 0 }
+        ],
+        [
+            { refX: 3, comparativeValue: 3, y: 0 },
+            { refX: 1, comparativeValue: 1, y: 0 },
+            { refX: 0, comparativeValue: 0, y: 1 },
+            { refX: 2, comparativeValue: 2, y: 1 }
         ]
-        const referenceTable = createCsvReferenceTable(matrix as [])
-        expect(referenceTable).toBe('0,0,3,0\n2,1,1,1\n1,1,0,0\n3,0,0,1')
-    })
-    it('extractYAndIndexFromCSV with balloon dataset', async () => {
+    ] as ReferenceTpe[][]
+    it('create decisionTree Sample', async () => {
         const matrix = [
-            ['YELLOW', 'SMALL', 'STRETCH', 'ADULT', 'T'],
-            ['YELLOW', 'SMALL', 'STRETCH', 'CHILD', 'T'],
-            ['YELLOW', 'SMALL', 'DIP', 'ADULT', 'T'],
-            ['YELLOW', 'SMALL', 'DIP', 'CHILD', 'F'],
-            ['YELLOW', 'SMALL', 'DIP', 'CHILD', 'F'],
-            ['YELLOW', 'LARGE', 'STRETCH', 'ADULT', 'T'],
-            ['YELLOW', 'LARGE', 'STRETCH', 'CHILD', 'T'],
-            ['YELLOW', 'LARGE', 'DIP', 'ADULT', 'T'],
-            ['YELLOW', 'LARGE', 'DIP', 'CHILD', 'F'],
-            ['YELLOW', 'LARGE', 'DIP', 'CHILD', 'F'],
-            ['PURPLE', 'SMALL', 'STRETCH', 'ADULT', 'T'],
-            ['PURPLE', 'SMALL', 'STRETCH', 'CHILD', 'T'],
-            ['PURPLE', 'SMALL', 'DIP', 'ADULT', 'T'],
-            ['PURPLE', 'SMALL', 'DIP', 'CHILD', 'F'],
-            ['PURPLE', 'SMALL', 'DIP', 'CHILD', 'F'],
-            ['PURPLE', 'LARGE', 'STRETCH', 'ADULT', 'T'],
-            ['PURPLE', 'LARGE', 'STRETCH', 'CHILD', 'T'],
-            ['PURPLE', 'LARGE', 'DIP', 'ADULT', 'T'],
-            ['PURPLE', 'LARGE', 'DIP', 'CHILD', 'F'],
-            ['PURPLE', 'LARGE', 'DIP', 'CHILD', 'F']
+            ['YELLOW', 5.4, 'T'],
+            ['YELLOW', 3.0, 'F'],
+            ['PURPLE', 6.1, 'T'],
+            ['YELLOW', 2.5, 'F']
         ]
-        const referenceTable = createCsvReferenceTable(matrix as [])
-        const out = `10,1,5,1,2,1,0,1\n10,1,5,1,2,0,0,1\n10,1,5,1,2,0,0,1\n10,0,5,0,2,1,0,1\n10,0,5,0,2,0,0,1\n10,1,5,1,2,0,0,1\n10,1,5,1,2,1,0,1\n10,1,5,1,2,0,0,1\n10,0,5,0,2,0,1,1\n10,0,5,0,2,1,1,0\n0,1,0,1,2,0,1,0\n0,1,0,1,2,0,1,1\n0,1,0,1,0,1,1,0\n0,0,0,0,0,1,1,0\n0,0,0,0,0,1,1,1\n0,1,0,1,0,1,1,0\n0,1,0,1,0,1,1,0\n0,1,0,1,0,1,1,1\n0,0,0,0,0,1,1,0\n0,0,0,0,0,1,1,0`
-        expect(referenceTable).toBe(out)
+        const ref = createDecisionTreeSample(matrix as [])
+        expect(ref).toStrictEqual(referenceTable)
     })
-    it('createRandomCSVChunks', () => {
+    it('create n random decisionTree samples', () => {
         const mockMath = Object.create(global.Math)
         let counter = 0
         const randomNumbers = [0, 1 / 4, 3 / 4, 0, 0, 0]
@@ -48,16 +36,40 @@ describe('prepare dataset', () => {
 
         global.Math = mockMath
 
-        const referenceTable = [
-            [0, 0, 3, 0],
-            [2, 1, 1, 1],
-            [1, 1, 0, 0],
-            [3, 0, 0, 1]
-        ]
-        const csvChunks = createRandomCSVChunks(referenceTable as [], 3, 2)
+        const csvChunks = splitDecisionTreeSampleIntoNEstimators(
+            referenceTable,
+            3,
+            2
+        )
         expect(csvChunks).toStrictEqual([
-            '0,0,0,0\n1,1,1,1\n3,0,3,1',
-            '0,0,0,0\n0,0,0,0\n0,0,0,0'
+            [
+                [
+                    { refX: 0, comparativeValue: 0, y: 1 },
+                    { refX: 0, comparativeValue: 0, y: 1 }
+                ],
+                [
+                    { refX: 1, comparativeValue: 0, y: 0 },
+                    { refX: 1, comparativeValue: 1, y: 0 }
+                ],
+                [
+                    { refX: 3, comparativeValue: 0, y: 0 },
+                    { refX: 3, comparativeValue: 3, y: 0 }
+                ]
+            ],
+            [
+                [
+                    { refX: 0, comperativeValue: 0, y: 1 },
+                    { refX: 0, comparativeValue: 0, y: 1 }
+                ],
+                [
+                    { refX: 0, comperativeValue: 0, y: 1 },
+                    { refX: 0, comparativeValue: 0, y: 1 }
+                ],
+                [
+                    { refX: 0, comperativeValue: 0, y: 1 },
+                    { refX: 0, comparativeValue: 0, y: 1 }
+                ]
+            ]
         ])
     })
 })
