@@ -1,7 +1,7 @@
 import { transpose } from '../../src/algorithms/matrixHelper'
-import Feature, { Entries } from '../../src/algorithms/Feature'
+import Feature from '../../src/algorithms/Feature'
 
-export default (X: [][], Y: Entries) => {
+export default (X: [][], Y: number[]) => {
     const transposed = transpose(X)
     return transposed.map((column, featureId) => {
         const feature = column.map((value, index) => ({ value, index }))

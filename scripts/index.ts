@@ -1,39 +1,28 @@
-import Papa = require('papaparse')
-import { readFileSync, writeFileSync, writeFile } from 'fs'
+import { readFileSync } from 'fs'
 import {
-    createCsvReferenceTable,
-    createRandomCSVChunks
+    createDecisionTreeSample,
+    splitDecisionTreeSampleIntoNEstimators,
+    toString
 } from './prepareDataset'
 
-const parseCSV = async (path: string) => {
+const parseCSV = (path: string) => {
     const file = readFileSync(path)
-    return await new Promise<[]>(resolve => {
-        Papa.parse(file.toLocaleString(), {
-            header: false,
-            complete: ({ data }) => resolve(data as [])
-        })
-    })
+    return file
+        .toLocaleString()
+        .split('\n')
+        .map(row => row.split(','))
 }
 
-export const createDataset = async (
-    trainSample: string,
-    outDirectory: string,
+export const writeSampleFile = async (
+    pathToCsvSample: string,
     nEstimators: number,
     sampleSize: number
 ) => {
-    const referencePath = `${outDirectory}/reference_table.csv`
-    const csv = await parseCSV(trainSample)
-    writeFileSync(referencePath, createCsvReferenceTable(csv))
-    const referenceTable = await parseCSV(referencePath)
-    await Promise.all(
-        createRandomCSVChunks(referenceTable, sampleSize, nEstimators).map(
-            (file, id) => {
-                new Promise(resolve =>
-                    writeFile(`${outDirectory}/${id}.csv`, file, () =>
-                        resolve(true)
-                    )
-                )
-            }
-        )
-    )
+    const data = parseCSV(pathToCsvSample)
+    const dtSample = createDecisionTreeSample(data as [])
+    return splitDecisionTreeSampleIntoNEstimators(
+        dtSample as [],
+        sampleSize,
+        nEstimators
+    ).map(dt => toString(dt))
 }

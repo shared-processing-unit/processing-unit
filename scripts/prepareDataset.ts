@@ -1,4 +1,5 @@
 import { transpose } from '../src/algorithms/matrixHelper'
+import { readFileSync } from 'fs'
 
 const anonymize = (data: []) => {
     const sorted = [...data].sort((a, b) => `${a}`.localeCompare(`${b}`))
@@ -24,7 +25,7 @@ export const createDecisionTreeSample = (data: []): DecisionTreeSample => {
             const distinctRef = sorted[anonymized.indexOf(value)]
             return {
                 refX,
-                comperativeValue: distinctRef.refX,
+                comparativeValue: distinctRef.refX,
                 y: Y[refX]
             } as ReferenceTpe
         })
@@ -33,29 +34,62 @@ export const createDecisionTreeSample = (data: []): DecisionTreeSample => {
 
 export type ReferenceTpe = {
     refX: number
-    comperativeValue: number
+    comparativeValue: number
     y: number
 }
 
 export type DecisionTreeSample = ReferenceTpe[][]
 
+export const toString = (dt: DecisionTreeSample) => {
+    const dtAsString = dt
+        .map(sample =>
+            sample
+                .map(
+                    ({ refX, comparativeValue, y }) =>
+                        `${refX},${comparativeValue},${y}`
+                )
+                .join(',')
+        )
+        .join('\n')
+    return dtAsString
+}
 export const splitDecisionTreeSampleIntoNEstimators = (
-    refTable: DecisionTreeSample,
+    dt: DecisionTreeSample,
     nofSamples: number,
     nofEstimators: number
 ): DecisionTreeSample[] => {
-    return Array(nofEstimators)
+    const transposedDt = transpose(dt)
+    console.log(transposedDt)
+    const dts = Array(nofEstimators)
         .fill({})
-        .map(() => {
+        .map(_ => {
             const randomIndexes = Array(nofSamples)
                 .fill({})
-                .map(() => Math.floor(Math.random() * refTable[0].length))
-                .sort()
-            return randomIndexes.map(
-                randomIndex =>
-                    refTable.map(
-                        row => row.filter(({ refX }) => refX === randomIndex)[0]
-                    ) as ReferenceTpe[]
-            )
+                .map(() => Math.floor(Math.random() * transposedDt.length))
+                .sort((a, b) => a - b)
+            return randomIndexes.map(randomIndex => transposedDt[randomIndex])
         })
+    return dts
+}
+
+const parseCSV = (path: string) => {
+    const file = readFileSync(path)
+    return file
+        .toLocaleString()
+        .split('\n')
+        .map(row => row.split(','))
+}
+
+export const createSampleFile = (
+    pathToCsvSample: string,
+    nEstimators: number,
+    sampleSize: number
+) => {
+    const data = parseCSV(pathToCsvSample)
+    const dtSample = createDecisionTreeSample(data as [])
+    return splitDecisionTreeSampleIntoNEstimators(
+        dtSample as [],
+        sampleSize,
+        nEstimators
+    ).map(dt => toString(dt))
 }

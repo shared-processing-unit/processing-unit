@@ -27,8 +27,8 @@ const splitFeatures = (tensor: Feature[], split: Split) => {
     const feature = tensor[split.featureIndex]
     const filter = createFilter(feature, split.splitOn + 1)
     return [
-        tensor.map((f) => filterLeft(f, filter)),
-        tensor.map((f) => filterRight(f, filter)),
+        tensor.map(f => filterLeft(f, filter)),
+        tensor.map(f => filterRight(f, filter))
     ]
 }
 

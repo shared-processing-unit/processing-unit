@@ -35,9 +35,10 @@ const applyFilter = (
 
 export default interface Feature {
     readonly indexes: number[]
+    readonly comparativeValue: number[]
     readonly refY: Entries
     readonly featureId: number
 }
 
-export type Entry = number | string
+export type Entry = number
 export type Entries = Entry[]
