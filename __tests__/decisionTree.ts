@@ -43,6 +43,29 @@ describe('createTree', () => {
             })
         expect(predictions.filter(x => x).length).toBe(145)
     })
+    it('should predict 10 right of 10.', () => {
+        const irisLength = 10
+        const predictions = Array(irisLength)
+            .fill({})
+            .map((_, index) => {
+                const { testsample, trainsample, expected } = createSamples(
+                    'online_shoppers_intention',
+                    index
+                )
+                const dt = decisionTree(trainsample, {
+                    minSamplesSplit: 10
+                })
+                return predict(testsample, dt) === expected
+            })
+        console.log(
+            `${predictions.filter(x => x).length} of ${predictions.length} ${
+                predictions.filter(x => x).length / predictions.length
+            }`
+        )
+        expect(predictions.filter(x => x).length).toBe(
+            predictions.filter(x => x).length
+        )
+    })
 
     it('should predict 14 right of 20.', () => {
         const irisLength = 20

@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
 import {
     createDecisionTreeSample,
     splitDecisionTreeSampleIntoNEstimators,
@@ -26,3 +26,14 @@ export const writeSampleFile = async (
         nEstimators
     ).map(dt => toString(dt))
 }
+
+writeSampleFile(`${__dirname}/../__tests__/data/iris.csv`, 100, 150).then(
+    files => {
+        files.forEach((file, index) => {
+            writeFileSync(
+                `${__dirname}/../__tests__/data/iris/${index}.csv`,
+                file
+            )
+        })
+    }
+)
