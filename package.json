@@ -6,6 +6,7 @@
     "scripts": {
         "test": "jest",
         "build": "yarn build:SPU && yarn build:summUp && yarn build:bestSplit && yarn build:decisionTree",
+        "build:samples": "ts-node ./scripts/index.ts",
         "build:summUp": "parcel build ./src/SummUpWorker.ts",
         "build:bestSplit": "parcel build ./src/BestSplitWorker.ts",
         "build:decisionTree": "parcel build ./src/DecisionTreeWorker.ts",
@@ -24,12 +25,11 @@
         "jest": "^24.9.0",
         "parcel-bundler": "^1.12.4",
         "ts-jest": "^24.2.0",
-        "typescript": "^3.7.2"
+        "typescript": "^3.9.2"
     },
     "dependencies": {
         "@shared-processing-unit/spu-models": "^1.0.4",
-        "@types/papaparse": "^5.0.3",
-        "papaparse": "^5.2.0"
+        "ts-node": "^8.10.1"
     },
     "jest": {
         "preset": "ts-jest",

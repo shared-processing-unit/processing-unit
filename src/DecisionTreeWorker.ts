@@ -1,22 +1,21 @@
 import { decisionTree } from './algorithms/decisionTree'
-import { transpose } from './algorithms/matrixHelper'
 import Feature from './algorithms/Feature'
+import { transpose } from './algorithms/matrixHelper'
 
 export const parseCSV = (csv: string, delimiter: string = ',') => {
-    const rows = csv.split('\n')
-    const data = transpose(rows.map(row => row.split(delimiter)))
-    const filterOutY = data.filter((_, index) => !(index % 2))
-    const parsedIndexes = filterOutY.map(indexes =>
-        indexes.map(index => Number.parseInt(index))
-    )
-    const features = parsedIndexes.map(
-        (indexes, featureId) =>
-            ({
-                indexes,
-                refY: data[featureId * 2 + 1],
-                featureId
-            } as Feature)
-    )
+    const rows = transpose(csv.split('\n').map(row => row.split(delimiter)))
+    const data = rows.map(row => row.map(c => Number.parseInt(c)))
+    const features = Array(data.length / 3)
+        .fill({})
+        .map(
+            (_, featureId) =>
+                ({
+                    indexes: data[featureId * 3],
+                    value: data[featureId * 3 + 1],
+                    refY: data[featureId * 3 + 2],
+                    featureId
+                } as Feature)
+        )
     return features
 }
 

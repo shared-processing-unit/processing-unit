@@ -2,10 +2,14 @@ import Feature from './Feature'
 import { reverse, vectorAdd } from './matrixHelper'
 
 export const evaluate = <T>(data: T[]) => {
-    const ginis = vectorAdd(
+    return vectorAdd(
         weightedGinies(data),
         weightedGinies(reverse(data)).reverse()
     )
+}
+
+export const bestEvaluation = <T>(data: T[]) => {
+    const ginis = evaluate(data)
     const value: number = Math.max(...ginis)
     return { splitOn: ginis.indexOf(value), value }
 }
@@ -24,16 +28,16 @@ const giniImpurity = (occurence: number[]) => {
 
 export default class Split {
     public readonly featureIndex: number
-    public readonly index1: number
-    public readonly index2: number
+    public readonly value1: number
+    public readonly value2: number
 
     constructor(
-        public readonly value: number,
+        public readonly gini: number,
         public readonly splitOn: number,
         feature: Feature
     ) {
         this.featureIndex = feature.featureId
-        this.index1 = feature.indexes[splitOn]
-        this.index2 = feature.indexes[splitOn + 1]
+        this.value1 = feature.value[splitOn]
+        this.value2 = feature.value[splitOn + 1]
     }
 }

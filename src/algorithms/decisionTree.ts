@@ -27,13 +27,21 @@ const splitFeatures = (tensor: Feature[], split: Split) => {
     const feature = tensor[split.featureIndex]
     const filter = createFilter(feature, split.splitOn + 1)
     return [
-        tensor.map((f) => filterLeft(f, filter)),
-        tensor.map((f) => filterRight(f, filter)),
+        tensor.map(f => filterLeft(f, filter)),
+        tensor.map(f => filterRight(f, filter))
     ]
 }
 
-const bestSplit = (tensor: Feature[]) =>
-    tensor.reduce((split, feature) => {
-        const { value, splitOn } = evaluate(feature.refY)
-        return split.value > value ? split : new Split(value, splitOn, feature)
-    }, {} as Split)
+const bestSplit = (tensor: Feature[]) => {
+    const splits = tensor.map(feature => {
+        const ginis = evaluate(feature.refY)
+        return Array.from(new Set(feature.value)).map(value => {
+            const index = feature.value.indexOf(value)
+            return new Split(ginis[index], index, feature)
+        })
+    })
+    const evaluations = [].concat(...(splits as [])) as Split[]
+    const ginis = evaluations.map(({ gini }) => gini)
+    const bestGini = Math.max(...ginis)
+    return evaluations[ginis.indexOf(bestGini)]
+}

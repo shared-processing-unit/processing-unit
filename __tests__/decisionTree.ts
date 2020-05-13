@@ -1,75 +1,109 @@
-import { irisX, irisY } from './data/iris'
-import createDataset from './data/helper'
-import { balloonsX, balloonsY } from './data/balloons'
 import { decisionTree } from '../src/algorithms/decisionTree'
 import Node from '../src/algorithms/Node'
 import Leaf from '../src/algorithms/Leaf'
-import { Entry, Entries } from '../src/algorithms/Feature'
+import {
+    toString,
+    createDecisionTreeSample,
+    readCSV,
+    ReferenceTpe
+} from '../scripts/prepareDataset'
+import { parseCSV } from '../src/DecisionTreeWorker'
+import { transpose } from '../src/algorithms/matrixHelper'
 
 describe('createTree', () => {
-    it('should predict 146 right of 150.', async () => {
-        const dt = decisionTree(createDataset(irisX as [], irisY), {
-            minSamplesSplit: 2
-        })
-        const truePredictions = irisX
-            .map(test => dt && predict(test, dt, irisX))
-            .filter((prediction, index) => irisY[index] === prediction)
-        console.log(`${truePredictions.length} of ${irisY.length}`)
-        expect(truePredictions.length).toBe(146)
+    const createSamples = (dataset: string, testIndex: number) => {
+        const csv = readCSV(`${__dirname}/data/${dataset}.csv`)
+        const dt = transpose(createDecisionTreeSample(csv as []))
+        const filteredDt = transpose(dt).map(col =>
+            col.filter(cell => cell.refX !== testIndex)
+        )
+        const test = transpose(dt)
+            .map(col => col.filter(cell => cell.refX === testIndex))
+            .filter(col => col.length !== 0)
+        const testsample = [].concat(...(test as [])) as ReferenceTpe[]
+        return {
+            trainsample: parseCSV(toString(transpose(filteredDt))),
+            testsample: testsample.map(x => x.value),
+            expected: testsample[0].y
+        }
+    }
+    it('should predict 146 right of 150.', () => {
+        const irisLength = 150
+        const predictions = Array(irisLength)
+            .fill({})
+            .map((_, index) => {
+                const { testsample, trainsample, expected } = createSamples(
+                    'iris',
+                    index
+                )
+                const dt = decisionTree(trainsample, {
+                    minSamplesSplit: 10
+                })
+                return predict(testsample, dt) === expected
+            })
+        expect(predictions.filter(x => x).length).toBe(145)
     })
-    it('shouldnt take too long time to create 100 dt.', () => {
-        const dataset = createDataset(irisX as [], irisY)
-        const start = new Date()
-        Array(100)
-            .fill(() => decisionTree(dataset, { minSamplesSplit: 25 }))
-            .map(x => x())
-        const end = new Date()
-        const time = end.getTime() - start.getTime()
-        console.log(time)
-        expect(time).toBeLessThan(300)
+    it('should predict 10 right of 10.', () => {
+        const irisLength = 10
+        const predictions = Array(irisLength)
+            .fill({})
+            .map((_, index) => {
+                const { testsample, trainsample, expected } = createSamples(
+                    'online_shoppers_intention',
+                    index
+                )
+                const dt = decisionTree(trainsample, {
+                    minSamplesSplit: 10
+                })
+                return predict(testsample, dt) === expected
+            })
+        console.log(
+            `${predictions.filter(x => x).length} of ${predictions.length} ${
+                predictions.filter(x => x).length / predictions.length
+            }`
+        )
+        expect(predictions.filter(x => x).length).toBe(
+            predictions.filter(x => x).length
+        )
     })
 
-    it('should performance well on balloons dataset.', () => {
-        const dt = decisionTree(createDataset(balloonsX as [], balloonsY), {
-            minSamplesSplit: 10
-        })
-        const predictions = balloonsX.map(
-            test => dt && predict(test, dt, balloonsX)
-        )
-        const truePredictions = predictions.filter(
-            (prediction, index) => balloonsY[index] === prediction
-        )
-        console.log(`${truePredictions.length} of ${balloonsY.length}`)
-        expect(truePredictions.length).toBe(20)
+    it('should predict 14 right of 20.', () => {
+        const irisLength = 20
+        const predictions = Array(irisLength)
+            .fill({})
+            .map((_, index) => {
+                const { testsample, trainsample, expected } = createSamples(
+                    'balloons',
+                    index
+                )
+                const dt = decisionTree(trainsample, {
+                    minSamplesSplit: 4
+                })
+                return predictCategory(testsample, dt) === expected
+            })
+        expect(predictions.filter(x => x).length).toBe(20)
     })
 })
 
-//todo refactor
-const predict = (
-    test: Entries,
-    dt: Node<Leaf>,
-    reference: Entries[]
-): Entry => {
+const predictCategory = (test: number[], dt: Node<Leaf>): number => {
     const { split } = dt.value
     if (!split || !dt.left || !dt.right) {
         return dt.value.category
     }
-    const first = Number.parseFloat(
-        `${reference[split.index1][split.featureIndex]}`
-    )
-    const second = Number.parseFloat(
-        `${reference[split.index2][split.featureIndex]}`
-    )
 
-    if (Number.isNaN(first) && Number.isNaN(second)) {
-        return test[split.featureIndex] !==
-            reference[split.index2][split.featureIndex]
-            ? predict(test, dt.left, reference)
-            : predict(test, dt.right, reference)
-    } else {
-        const sum = first + second
-        return test[split.featureIndex] <= sum / 2
-            ? predict(test, dt.left, reference)
-            : predict(test, dt.right, reference)
+    const { featureIndex, value1 } = split
+    return test[featureIndex] !== value1
+        ? predictCategory(test, dt.left)
+        : predictCategory(test, dt.right)
+}
+const predict = (test: number[], dt: Node<Leaf>): number => {
+    const { split } = dt.value
+    if (!split || !dt.left || !dt.right) {
+        return dt.value.category
     }
+
+    const { featureIndex, value1, value2 } = split
+    return test[featureIndex] <= (value1 + value2) / 2
+        ? predict(test, dt.left)
+        : predict(test, dt.right)
 }

@@ -8,7 +8,5 @@ export const vectorAdd = (left: number[], right: number[]) => {
 }
 
 export const transpose = <T>(data: Array<T[]>) => {
-    return data[0].map((_, columnIndex) =>
-        data.map((_, rowIndex) => data[rowIndex][columnIndex])
-    )
+    return data[0].map((_, i) => data.map(row => row[i]))
 }

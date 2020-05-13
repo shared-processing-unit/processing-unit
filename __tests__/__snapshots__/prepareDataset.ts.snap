@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`prepare dataset create n random decisionTree samples 1`] = `
+Array [
+  Array [
+    Array [
+      Object {
+        "refX": 2,
+        "value": 0,
+        "y": 1,
+      },
+      Object {
+        "refX": 3,
+        "value": 0,
+        "y": 0,
+      },
+    ],
+    Array [
+      Object {
+        "refX": 0,
+        "value": 1,
+        "y": 1,
+      },
+      Object {
+        "refX": 1,
+        "value": 1,
+        "y": 0,
+      },
+    ],
+    Array [
+      Object {
+        "refX": 3,
+        "value": 1,
+        "y": 0,
+      },
+      Object {
+        "refX": 2,
+        "value": 3,
+        "y": 1,
+      },
+    ],
+  ],
+  Array [
+    Array [
+      Object {
+        "refX": 2,
+        "value": 0,
+        "y": 1,
+      },
+      Object {
+        "refX": 3,
+        "value": 0,
+        "y": 0,
+      },
+    ],
+    Array [
+      Object {
+        "refX": 2,
+        "value": 0,
+        "y": 1,
+      },
+      Object {
+        "refX": 3,
+        "value": 0,
+        "y": 0,
+      },
+    ],
+    Array [
+      Object {
+        "refX": 2,
+        "value": 0,
+        "y": 1,
+      },
+      Object {
+        "refX": 3,
+        "value": 0,
+        "y": 0,
+      },
+    ],
+  ],
+]
+`;
