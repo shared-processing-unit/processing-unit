@@ -37,15 +37,42 @@ describe('createTree', () => {
                     index
                 )
                 const dt = decisionTree(trainsample, {
-                    minSamplesSplit: 5
+                    minSamplesSplit: 10
                 })
                 return predict(testsample, dt) === expected
             })
         expect(predictions.filter(x => x).length).toBe(145)
     })
+
+    it('should predict 14 right of 20.', () => {
+        const irisLength = 20
+        const predictions = Array(irisLength)
+            .fill({})
+            .map((_, index) => {
+                const { testsample, trainsample, expected } = createSamples(
+                    'balloons',
+                    index
+                )
+                const dt = decisionTree(trainsample, {
+                    minSamplesSplit: 4
+                })
+                return predictCategory(testsample, dt) === expected
+            })
+        expect(predictions.filter(x => x).length).toBe(20)
+    })
 })
 
-//todo refactor
+const predictCategory = (test: number[], dt: Node<Leaf>): number => {
+    const { split } = dt.value
+    if (!split || !dt.left || !dt.right) {
+        return dt.value.category
+    }
+
+    const { featureIndex, value1 } = split
+    return test[featureIndex] !== value1
+        ? predictCategory(test, dt.left)
+        : predictCategory(test, dt.right)
+}
 const predict = (test: number[], dt: Node<Leaf>): number => {
     const { split } = dt.value
     if (!split || !dt.left || !dt.right) {
