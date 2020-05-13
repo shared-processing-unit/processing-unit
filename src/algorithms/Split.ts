@@ -32,7 +32,7 @@ export default class Split {
     public readonly value2: number
 
     constructor(
-        public readonly value: number,
+        public readonly gini: number,
         public readonly splitOn: number,
         feature: Feature
     ) {

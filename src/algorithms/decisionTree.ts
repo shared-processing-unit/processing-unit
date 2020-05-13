@@ -32,24 +32,16 @@ const splitFeatures = (tensor: Feature[], split: Split) => {
     ]
 }
 
-const bestSplit = (tensor: Feature[]) =>
-    tensor.reduce((split, feature) => {
+const bestSplit = (tensor: Feature[]) => {
+    const splits = tensor.map(feature => {
         const ginis = evaluate(feature.refY)
-        /* const value = Math.max(...ginis)
-        const splitOn = ginis.indexOf(value)*/
-        const { value, splitOn } = Array.from(new Set(feature.value))
-            .map(value => {
-                const index = feature.value.indexOf(value)
-                return [ginis[index], index]
-            })
-            .reduce(
-                (prev, [value, splitOn]) => {
-                    if (prev.value > value) {
-                        return prev
-                    }
-                    return { value, splitOn }
-                },
-                { value: -1, splitOn: -1 }
-            )
-        return split.value > value ? split : new Split(value, splitOn, feature)
-    }, {} as Split)
+        return Array.from(new Set(feature.value)).map(value => {
+            const index = feature.value.indexOf(value)
+            return new Split(ginis[index], index, feature)
+        })
+    })
+    const evaluations = [].concat(...(splits as [])) as Split[]
+    const ginis = evaluations.map(({ gini }) => gini)
+    const bestGini = Math.max(...ginis)
+    return evaluations[ginis.indexOf(bestGini)]
+}
