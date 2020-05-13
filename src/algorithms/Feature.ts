@@ -13,7 +13,7 @@ export const filterRight = (feature: Feature, refToFilter: Set<number>) => {
     return applyFilter(feature, refToFilter, false)
 }
 const applyFilter = (
-    { featureId, refY, indexes }: Feature,
+    { featureId, refY, indexes, value }: Feature,
     refToFilter: Set<number>,
     left: boolean
 ) => {
@@ -29,13 +29,14 @@ const applyFilter = (
     return {
         indexes: filterOut(indexes),
         refY: filterOut(refY),
-        featureId
+        featureId,
+        value: filterOut(value)
     } as Feature
 }
 
 export default interface Feature {
     readonly indexes: number[]
-    readonly comparativeValue: number[]
+    readonly value: number[]
     readonly refY: Entries
     readonly featureId: number
 }

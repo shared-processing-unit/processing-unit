@@ -5,7 +5,7 @@ import {
     toString
 } from './prepareDataset'
 
-const parseCSV = (path: string) => {
+export const parseCSV = (path: string) => {
     const file = readFileSync(path)
     return file
         .toLocaleString()

@@ -6,9 +6,7 @@ export default (X: [][], Y: number[]) => {
     return transposed.map((column, featureId) => {
         const feature = column.map((value, index) => ({ value, index }))
         const x = feature
-            .sort((cell1, cell2) =>
-                `${cell1.value}`.localeCompare(`${cell2.value}`)
-            )
+            .sort((a, b) => a.value - b.value)
             .map(({ index }) => ({ refY: Y[index], index }))
         return {
             indexes: x.map(f => f.index),

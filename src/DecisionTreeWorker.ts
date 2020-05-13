@@ -11,8 +11,8 @@ export const parseCSV = (csv: string, delimiter: string = ',') => {
             (_, featureId) =>
                 ({
                     indexes: data[featureId * 3],
+                    value: data[featureId * 3 + 1],
                     refY: data[featureId * 3 + 2],
-                    comparativeValue: data[featureId * 3 + 1],
                     featureId
                 } as Feature)
         )

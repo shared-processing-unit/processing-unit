@@ -1,23 +1,23 @@
 import {
-    createDecisionTreeSample,
+    //  createDecisionTreeSample,
     splitDecisionTreeSampleIntoNEstimators,
     ReferenceTpe
 } from '../scripts/prepareDataset'
 describe('prepare dataset', () => {
     const referenceTable = [
         [
-            { refX: 2, comparativeValue: 2, y: 1 },
-            { refX: 0, comparativeValue: 0, y: 1 },
-            { refX: 1, comparativeValue: 0, y: 0 },
-            { refX: 3, comparativeValue: 0, y: 0 }
+            { refX: 2, value: 0, y: 1 },
+            { refX: 0, value: 1, y: 1 },
+            { refX: 1, value: 1, y: 0 },
+            { refX: 3, value: 1, y: 0 }
         ],
         [
-            { refX: 3, comparativeValue: 3, y: 0 },
-            { refX: 1, comparativeValue: 1, y: 0 },
-            { refX: 0, comparativeValue: 0, y: 1 },
-            { refX: 2, comparativeValue: 2, y: 1 }
+            { refX: 3, value: 0, y: 0 },
+            { refX: 1, value: 1, y: 0 },
+            { refX: 0, value: 2, y: 1 },
+            { refX: 2, value: 3, y: 1 }
         ]
-    ] as ReferenceTpe[][]
+    ] as ReferenceTpe[][] /*
     it('create decisionTree Sample', async () => {
         const matrix = [
             ['YELLOW', 5.4, 'T'],
@@ -27,7 +27,7 @@ describe('prepare dataset', () => {
         ]
         const ref = createDecisionTreeSample(matrix as [])
         expect(ref).toStrictEqual(referenceTable)
-    })
+    })*/
     it('create n random decisionTree samples', () => {
         const mockMath = Object.create(global.Math)
         let counter = 0
@@ -41,35 +41,6 @@ describe('prepare dataset', () => {
             3,
             2
         )
-        expect(csvChunks).toStrictEqual([
-            [
-                [
-                    { refX: 0, comparativeValue: 0, y: 1 },
-                    { refX: 0, comparativeValue: 0, y: 1 }
-                ],
-                [
-                    { refX: 1, comparativeValue: 0, y: 0 },
-                    { refX: 1, comparativeValue: 1, y: 0 }
-                ],
-                [
-                    { refX: 3, comparativeValue: 0, y: 0 },
-                    { refX: 3, comparativeValue: 3, y: 0 }
-                ]
-            ],
-            [
-                [
-                    { refX: 0, comparativeValue: 0, y: 1 },
-                    { refX: 0, comparativeValue: 0, y: 1 }
-                ],
-                [
-                    { refX: 0, comparativeValue: 0, y: 1 },
-                    { refX: 0, comparativeValue: 0, y: 1 }
-                ],
-                [
-                    { refX: 0, comparativeValue: 0, y: 1 },
-                    { refX: 0, comparativeValue: 0, y: 1 }
-                ]
-            ]
-        ])
+        expect(csvChunks).toMatchSnapshot()
     })
 })

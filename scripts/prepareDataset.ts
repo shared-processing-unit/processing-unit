@@ -2,7 +2,7 @@ import { transpose } from '../src/algorithms/matrixHelper'
 import { readFileSync } from 'fs'
 
 const anonymize = (data: []) => {
-    const sorted = [...data].sort((a, b) => `${a}`.localeCompare(`${b}`))
+    const sorted = [...data].sort((a, b) => a - b)
     const distinct = Array.from(new Set(sorted))
     return data.map(value => distinct.indexOf(value))
 }
@@ -16,25 +16,26 @@ const anonymizeMatrix = (csv: [][]) => {
 
 export const createDecisionTreeSample = (data: []): DecisionTreeSample => {
     const [X, Y] = anonymizeMatrix(data)
-    return X.map(column => {
+    const dt = X.map(column => {
         const sorted = column
             .map((value, refX) => ({ value, refX }))
-            .sort(({ value }, cell2) => `${value}`.localeCompare(cell2.value))
+            .sort((a, b) => a.value - b.value)
         const anonymized = anonymize(sorted.map(({ value }) => value) as [])
         return sorted.map(({ refX, value }) => {
-            const distinctRef = sorted[anonymized.indexOf(value)]
+            const distinctRef = anonymized.indexOf(value)
             return {
                 refX,
-                comparativeValue: distinctRef.refX,
+                value: distinctRef,
                 y: Y[refX]
             } as ReferenceTpe
         })
     })
+    return dt
 }
 
 export type ReferenceTpe = {
     refX: number
-    comparativeValue: number
+    value: number
     y: number
 }
 
@@ -44,10 +45,7 @@ export const toString = (dt: DecisionTreeSample) => {
     const dtAsString = dt
         .map(sample =>
             sample
-                .map(
-                    ({ refX, comparativeValue, y }) =>
-                        `${refX},${comparativeValue},${y}`
-                )
+                .map(({ refX, value, y }) => `${refX},${value},${y}`)
                 .join(',')
         )
         .join('\n')
@@ -59,8 +57,7 @@ export const splitDecisionTreeSampleIntoNEstimators = (
     nofEstimators: number
 ): DecisionTreeSample[] => {
     const transposedDt = transpose(dt)
-    console.log(transposedDt)
-    const dts = Array(nofEstimators)
+    return Array(nofEstimators)
         .fill({})
         .map(_ => {
             const randomIndexes = Array(nofSamples)
@@ -69,13 +66,12 @@ export const splitDecisionTreeSampleIntoNEstimators = (
                 .sort((a, b) => a - b)
             return randomIndexes.map(randomIndex => transposedDt[randomIndex])
         })
-    return dts
 }
 
-const parseCSV = (path: string) => {
-    const file = readFileSync(path)
+export const readCSV = (path: string) => {
+    const file = readFileSync(path, { encoding: 'utf-8' })
     return file
-        .toLocaleString()
+        .toString()
         .split('\n')
         .map(row => row.split(','))
 }
@@ -85,11 +81,11 @@ export const createSampleFile = (
     nEstimators: number,
     sampleSize: number
 ) => {
-    const data = parseCSV(pathToCsvSample)
+    const data = readCSV(pathToCsvSample)
     const dtSample = createDecisionTreeSample(data as [])
     return splitDecisionTreeSampleIntoNEstimators(
         dtSample as [],
         sampleSize,
         nEstimators
-    ).map(dt => toString(dt))
+    )
 }
