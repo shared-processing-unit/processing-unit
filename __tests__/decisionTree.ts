@@ -1,7 +1,6 @@
 import {
     parseDecisionTreeSample,
-    decisionTree,
-    createRandomForest
+    decisionTree
 } from '../src/algorithms/decisionTree'
 import Node from '../src/algorithms/Node'
 import Leaf from '../src/algorithms/Leaf'
@@ -61,24 +60,6 @@ describe('createTree', () => {
             })
 
         expect(predictions.filter(x => x).length).toBe(19)
-    })
-
-    it('should predict 145 of 150 right', () => {
-        const file = readFileSync(`${__dirname}/data/iris.csv`)
-        const [sample] = createRandomForest(file.toString(), 1, 1000)
-        const features = parseDecisionTreeSample(sample)
-        const predictions = Array(features[0].indexes.length)
-            .fill({})
-            .map((_, i) => {
-                const { trainSample, testSample, expected } = createSamples(
-                    features,
-                    i
-                )
-                const dt = decisionTree(trainSample, { minSamplesSplit: 1 })
-                return predict(testSample, dt) === expected
-            })
-
-        expect(predictions.filter(x => x).length).toBe(predictions)
     })
 })
 
