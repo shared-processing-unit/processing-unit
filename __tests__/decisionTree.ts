@@ -1,87 +1,84 @@
-import { decisionTree } from '../src/algorithms/decisionTree'
+import {
+    parseDecisionTreeSample,
+    decisionTree,
+    createRandomForest
+} from '../src/algorithms/decisionTree'
 import Node from '../src/algorithms/Node'
 import Leaf from '../src/algorithms/Leaf'
-import {
-    toString,
-    createDecisionTreeSample,
-    readCSV,
-    ReferenceTpe
-} from '../scripts/prepareDataset'
-import { parseCSV } from '../src/DecisionTreeWorker'
-import { transpose } from '../src/algorithms/matrixHelper'
+import { readFileSync } from 'fs'
+import Feature from '../src/algorithms/Feature'
 
 describe('createTree', () => {
-    const createSamples = (dataset: string, testIndex: number) => {
-        const csv = readCSV(`${__dirname}/data/${dataset}.csv`)
-        const dt = transpose(createDecisionTreeSample(csv as []))
-        const filteredDt = transpose(dt).map(col =>
-            col.filter(cell => cell.refX !== testIndex)
-        )
-        const test = transpose(dt)
-            .map(col => col.filter(cell => cell.refX === testIndex))
-            .filter(col => col.length !== 0)
-        const testsample = [].concat(...(test as [])) as ReferenceTpe[]
-        return {
-            trainsample: parseCSV(toString(transpose(filteredDt))),
-            testsample: testsample.map(x => x.value),
-            expected: testsample[0].y
-        }
+    const createSamples = (features: Feature[], testIndex: number) => {
+        const trainSample = features.map(feature => {
+            const index = feature.indexes.indexOf(testIndex)
+            return {
+                featureId: feature.featureId,
+                indexes: feature.indexes.filter((_, ii) => ii !== index),
+                value: feature.value.filter((_, ii) => ii !== index),
+                refY: feature.refY.filter((_, ii) => ii !== index)
+            } as Feature
+        })
+        const testSample = features.map(feature => {
+            const index = feature.indexes.indexOf(testIndex)
+            return feature.value[index]
+        })
+
+        const expected =
+            features[0].refY[features[0].indexes.indexOf(testIndex)]
+
+        return { expected, testSample, trainSample }
     }
-    it('should predict 146 right of 150.', () => {
-        const irisLength = 150
-        const predictions = Array(irisLength)
+
+    it('should predict 145 of 150 right', () => {
+        const file = readFileSync(`${__dirname}/data/iris.csv`)
+        const features = parseDecisionTreeSample(file.toString())
+        const predictions = Array(features[0].indexes.length)
             .fill({})
-            .map((_, index) => {
-                const { testsample, trainsample, expected } = createSamples(
-                    'iris',
-                    index
+            .map((_, i) => {
+                const { trainSample, testSample, expected } = createSamples(
+                    features,
+                    i
                 )
-                const dt = decisionTree(trainsample, {
-                    minSamplesSplit: 10
-                })
-                return predict(testsample, dt) === expected
+                const dt = decisionTree(trainSample, { minSamplesSplit: 10 })
+                return predict(testSample, dt) === expected
             })
+
         expect(predictions.filter(x => x).length).toBe(145)
     })
-    it('should predict 10 right of 10.', () => {
-        const irisLength = 10
-        const predictions = Array(irisLength)
+    it('should predict 20 of 20 right', () => {
+        const file = readFileSync(`${__dirname}/data/balloons.csv`)
+        const features = parseDecisionTreeSample(file.toString())
+        const predictions = Array(features[0].indexes.length)
             .fill({})
-            .map((_, index) => {
-                const { testsample, trainsample, expected } = createSamples(
-                    'online_shoppers_intention',
-                    index
+            .map((_, i) => {
+                const { trainSample, testSample, expected } = createSamples(
+                    features,
+                    i
                 )
-                const dt = decisionTree(trainsample, {
-                    minSamplesSplit: 10
-                })
-                return predict(testsample, dt) === expected
+                const dt = decisionTree(trainSample, { minSamplesSplit: 8 })
+                return predictCategory(testSample, dt) === expected
             })
-        console.log(
-            `${predictions.filter(x => x).length} of ${predictions.length} ${
-                predictions.filter(x => x).length / predictions.length
-            }`
-        )
-        expect(predictions.filter(x => x).length).toBe(
-            predictions.filter(x => x).length
-        )
+
+        expect(predictions.filter(x => x).length).toBe(19)
     })
 
-    it('should predict 14 right of 20.', () => {
-        const irisLength = 20
-        const predictions = Array(irisLength)
+    it('should predict 145 of 150 right', () => {
+        const file = readFileSync(`${__dirname}/data/iris.csv`)
+        const [sample] = createRandomForest(file.toString(), 1, 1000)
+        const features = parseDecisionTreeSample(sample)
+        const predictions = Array(features[0].indexes.length)
             .fill({})
-            .map((_, index) => {
-                const { testsample, trainsample, expected } = createSamples(
-                    'balloons',
-                    index
+            .map((_, i) => {
+                const { trainSample, testSample, expected } = createSamples(
+                    features,
+                    i
                 )
-                const dt = decisionTree(trainsample, {
-                    minSamplesSplit: 4
-                })
-                return predictCategory(testsample, dt) === expected
+                const dt = decisionTree(trainSample, { minSamplesSplit: 1 })
+                return predict(testSample, dt) === expected
             })
-        expect(predictions.filter(x => x).length).toBe(20)
+
+        expect(predictions.filter(x => x).length).toBe(predictions)
     })
 })
 
