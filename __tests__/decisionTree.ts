@@ -1,16 +1,16 @@
-import {
-    parseUnsortedCSV,
-    decisionTree,
-    parseSortedCSV,
-    featureToString,
-    filterOut,
-    getValueOfRows,
-    createRandomForest
-} from '../src/algorithms/decisionTree'
 import Node from '../src/algorithms/Node'
 import Leaf from '../src/algorithms/Leaf'
 import { readFileSync } from 'fs'
 import Options from '../src/algorithms/Options'
+import {
+    filterOut,
+    parseSortedCSV,
+    parseUnsortedCSV,
+    getValueOfRows,
+    featureToString,
+    createRandomForest
+} from '../src/sample/createRandomForest'
+import { decisionTree } from '../src/algorithms/decisionTree'
 
 describe('createTree', () => {
     const createPredictions = (
