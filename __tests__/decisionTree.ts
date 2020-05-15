@@ -4,7 +4,8 @@ import {
     parseSortedCSV,
     featureToString,
     filterOut,
-    getValueOfRows
+    getValueOfRows,
+    createRandomForest
 } from '../src/algorithms/decisionTree'
 import Node from '../src/algorithms/Node'
 import Leaf from '../src/algorithms/Leaf'
@@ -59,6 +60,35 @@ describe('createTree', () => {
         const parsed = parseUnsortedCSV(unsortedCSV)
         const features = parseSortedCSV(parsed)
         expect(featureToString(features)).toBe(parsed)
+    })
+
+    it('random forest', () => {
+        const file = readFileSync(`${__dirname}/data/iris.csv`)
+        const csv = file.toString()
+        const testIndexes = [42, 10, 65, 110, 82, 135]
+        const randomNumbers = createRandomForest(150, 10, 150, testIndexes)
+        const values = getValueOfRows(csv, testIndexes)
+        const dts = randomNumbers.map(bucket => {
+            const dataset = filterOut(csv, bucket)
+            const features = parseSortedCSV(parseUnsortedCSV(dataset))
+            return decisionTree(features, { minSamplesSplit: 49 })
+        })
+        values.map(value => {
+            const predictions = dts.map(dt => predict(value.values, dt))
+            const predictionMap = Array.from(
+                predictions.reduce((prev, prediction) => {
+                    const count = prev.get(prediction) || 0
+                    return prev.set(prediction, count + 1)
+                }, new Map())
+            )
+            const mostOccurentCategory = Math.max(
+                ...predictionMap.map(([, o]) => o)
+            )
+            const [[category]] = predictionMap.filter(
+                ([, o]) => o === mostOccurentCategory
+            )
+            expect(category).toBe(value.expected)
+        })
     })
 })
 
