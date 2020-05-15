@@ -48,23 +48,40 @@ const bestSplit = (tensor: Feature[]) => {
 }
 
 export const createRandomForest = (
-    csv: string,
+    dataLength: number,
     nEstimators: number,
-    sampleSize: number
+    sampleSize: number,
+    filter: number[]
 ) => {
-    const data = csv.split('\n')
     return Array(nEstimators)
         .fill({})
         .map(() => {
             return Array(sampleSize)
                 .fill({})
-                .map(() => Math.floor(Math.random() * data.length))
-                .map(randomNumber => data[randomNumber])
-                .join('\n')
+                .map(() => {
+                    let randomValue = -1
+                    do {
+                        randomValue = Math.floor(Math.random() * dataLength)
+                    } while (filter.indexOf(randomValue) !== -1)
+                    return randomValue
+                })
+                .sort((a, b) => a - b)
         })
 }
 
-export const parseDecisionTreeSample = (csv: string) => {
+export const featureToString = (features: Feature[]) => {
+    return features
+        .map(feature => {
+            return [
+                feature.indexes.join(','),
+                feature.value.join(','),
+                feature.refY.join(',')
+            ].join('\n')
+        })
+        .join('\n')
+}
+
+export const parseUnsortedCSV = (csv: string) => {
     const data = transpose(
         csv.split('\n').map(row => row.split(','))
     ).map(col =>
@@ -74,17 +91,67 @@ export const parseDecisionTreeSample = (csv: string) => {
     )
     const X = data.slice(0, -1)
     const [Y] = data.slice(-1)
-    return X.map((col, featureId) => {
+    return X.map(col => {
         const sortedCol = col.sort((a, b) => a.value - b.value)
 
         const distinctValue = Array.from(
             new Set(sortedCol.map(cell => cell.value))
         )
+        return [
+            sortedCol.map(({ refX }) => refX).join(','),
+            sortedCol
+                .map(({ value }) => distinctValue.indexOf(value))
+                .join(','),
+            sortedCol.map(({ refX }) => Y[refX].value).join(',')
+        ].join('\n')
+    }).join('\n')
+}
+
+export const parseSortedCSV = (csv: string) => {
+    const nofColumns = 3
+    const data = csv
+        .split('\n')
+        .map(row => row.split(','))
+        .map(col => col.map(value => Number.parseFloat(value)))
+
+    return Array(data.length / nofColumns)
+        .fill({})
+        .map((_, featureId) => {
+            return {
+                featureId,
+                indexes: data[featureId * nofColumns],
+                value: data[featureId * nofColumns + 1],
+                refY: data[featureId * nofColumns + 2]
+            } as Feature
+        })
+}
+
+export const createSamples = (features: Feature[], splitIndexes: number[]) => {
+    const sample1 = features.map(({ featureId, indexes, value, refY }) => {
         return {
             featureId,
-            value: sortedCol.map(({ value }) => distinctValue.indexOf(value)),
-            refY: sortedCol.map(({ refX }) => Y[refX].value),
-            indexes: sortedCol.map(({ refX }) => refX)
+            indexes: indexes.filter((_, ii) => splitIndexes.indexOf(ii) === -1),
+            value: value.filter((_, ii) => splitIndexes.indexOf(ii) === -1),
+            refY: refY.filter((_, ii) => splitIndexes.indexOf(ii) === -1)
         } as Feature
     })
+    const sample2 = features.map(({ featureId, indexes, value, refY }) => {
+        return {
+            featureId,
+            indexes: indexes.filter((_, ii) => splitIndexes.indexOf(ii) !== -1),
+            value: value.filter((_, ii) => splitIndexes.indexOf(ii) !== -1),
+            refY: refY.filter((_, ii) => splitIndexes.indexOf(ii) !== -1)
+        } as Feature
+    })
+    const valuesSample2 = splitIndexes.map(testIndex =>
+        features.map(feature => {
+            const index = feature.indexes.indexOf(testIndex)
+            return feature.value[index]
+        })
+    )
+    const expectedSample2 = splitIndexes.map(
+        i => features[0].refY[features[0].indexes.indexOf(i)]
+    )
+
+    return { expectedSample2, valuesSample2, sample1, sample2 }
 }

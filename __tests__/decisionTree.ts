@@ -1,65 +1,93 @@
 import {
-    parseDecisionTreeSample,
-    decisionTree
+    parseUnsortedCSV,
+    decisionTree,
+    createSamples,
+    parseSortedCSV,
+    createRandomForest,
+    featureToString
 } from '../src/algorithms/decisionTree'
 import Node from '../src/algorithms/Node'
 import Leaf from '../src/algorithms/Leaf'
 import { readFileSync } from 'fs'
-import Feature from '../src/algorithms/Feature'
 
 describe('createTree', () => {
-    const createSamples = (features: Feature[], testIndex: number) => {
-        const trainSample = features.map(feature => {
-            const index = feature.indexes.indexOf(testIndex)
-            return {
-                featureId: feature.featureId,
-                indexes: feature.indexes.filter((_, ii) => ii !== index),
-                value: feature.value.filter((_, ii) => ii !== index),
-                refY: feature.refY.filter((_, ii) => ii !== index)
-            } as Feature
-        })
-        const testSample = features.map(feature => {
-            const index = feature.indexes.indexOf(testIndex)
-            return feature.value[index]
-        })
-
-        const expected =
-            features[0].refY[features[0].indexes.indexOf(testIndex)]
-
-        return { expected, testSample, trainSample }
-    }
-
     it('should predict 145 of 150 right', () => {
         const file = readFileSync(`${__dirname}/data/iris.csv`)
-        const features = parseDecisionTreeSample(file.toString())
+        const features = parseSortedCSV(parseUnsortedCSV(file.toString()))
         const predictions = Array(features[0].indexes.length)
             .fill({})
             .map((_, i) => {
-                const { trainSample, testSample, expected } = createSamples(
-                    features,
-                    i
-                )
-                const dt = decisionTree(trainSample, { minSamplesSplit: 10 })
-                return predict(testSample, dt) === expected
+                const {
+                    sample1,
+                    valuesSample2,
+                    expectedSample2
+                } = createSamples(features, [i])
+                const dt = decisionTree(sample1, { minSamplesSplit: 10 })
+                return predict(valuesSample2[0], dt) === expectedSample2[0]
             })
 
-        expect(predictions.filter(x => x).length).toBe(145)
+        expect(predictions.filter(x => x).length).toBe(146)
     })
     it('should predict 20 of 20 right', () => {
         const file = readFileSync(`${__dirname}/data/balloons.csv`)
-        const features = parseDecisionTreeSample(file.toString())
+        const features = parseSortedCSV(parseUnsortedCSV(file.toString()))
         const predictions = Array(features[0].indexes.length)
             .fill({})
             .map((_, i) => {
-                const { trainSample, testSample, expected } = createSamples(
-                    features,
-                    i
+                const {
+                    sample1,
+                    valuesSample2,
+                    expectedSample2
+                } = createSamples(features, [i])
+                const dt = decisionTree(sample1, { minSamplesSplit: 8 })
+                return (
+                    predictCategory(valuesSample2[0], dt) === expectedSample2[0]
                 )
-                const dt = decisionTree(trainSample, { minSamplesSplit: 8 })
-                return predictCategory(testSample, dt) === expected
             })
 
-        expect(predictions.filter(x => x).length).toBe(19)
+        expect(predictions.filter(x => x).length).toBe(20)
+    })
+    it('test random forest', () => {
+        const file = readFileSync(`${__dirname}/data/iris.csv`)
+        const features = parseSortedCSV(parseUnsortedCSV(file.toString()))
+        const [testIndexes] = createRandomForest(150, 1, 4, [])
+        const { sample1, valuesSample2, expectedSample2 } = createSamples(
+            features,
+            testIndexes
+        )
+        const dts = createRandomForest(
+            sample1[0].indexes.length,
+            1,
+            150,
+            testIndexes
+        ).map(randomNumbers => {
+            const samples = createSamples(sample1, randomNumbers)
+            const dt = decisionTree(samples.sample2, {
+                minSamplesSplit: 10
+            })
+
+            return dt
+        })
+        valuesSample2.map((testSample, i) => {
+            const predictions = dts.map(dt => predict(testSample, dt))
+            const occurencies = predictions.reduce((prev, current) => {
+                const occ = prev.get(current) || 0
+                return prev.set(current, occ + 1)
+            }, new Map<number, number>())
+            console.log(occurencies, expectedSample2[i])
+        })
+        /*3  console.log(
+            `performance DT: ${
+                performanceDt.filter(x => x).length / performanceDt.length
+            }`
+        )*/
+    })
+    it('parsed() = (parsed()^-1)^-1', () => {
+        const file = readFileSync(`${__dirname}/data/iris.csv`)
+        const unsortedCSV = file.toString()
+        const parsed = parseUnsortedCSV(unsortedCSV)
+        const features = parseSortedCSV(parsed)
+        expect(featureToString(features)).toBe(parsed)
     })
 })
 
