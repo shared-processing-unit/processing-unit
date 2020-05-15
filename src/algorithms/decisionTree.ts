@@ -76,7 +76,6 @@ export const createRandomForest = (
                     } while (filter.indexOf(randomValue) !== -1)
                     return randomValue
                 })
-                .sort((a, b) => a - b)
         })
 }
 
