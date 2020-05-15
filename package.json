@@ -6,7 +6,7 @@
     "scripts": {
         "test": "jest",
         "build": "yarn build:SPU && yarn build:summUp && yarn build:bestSplit && yarn build:decisionTree",
-        "build:samples": "ts-node ./scripts/index.ts",
+        "build:samples": "ts-node ./src/sample/index.ts",
         "build:summUp": "parcel build ./src/SummUpWorker.ts",
         "build:bestSplit": "parcel build ./src/BestSplitWorker.ts",
         "build:decisionTree": "parcel build ./src/DecisionTreeWorker.ts",
