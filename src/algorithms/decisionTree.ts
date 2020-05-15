@@ -3,7 +3,6 @@ import Leaf from './Leaf'
 import Feature, { createFilter, filterLeft, filterRight } from './Feature'
 import Node from './Node'
 import Options from './Options'
-import { transpose } from './matrixHelper'
 
 export const decisionTree = (
     tensor: Feature[],
