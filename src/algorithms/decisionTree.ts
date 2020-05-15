@@ -10,6 +10,17 @@ export const decisionTree = (
     options: Options
 ): Node<Leaf> => {
     if (
+        !tensor.every(
+            x =>
+                x.indexes.length === x.refY.length &&
+                x.refY.length === x.value.length &&
+                tensor.filter(y => y.indexes.length !== x.indexes.length)
+                    .length === 0
+        )
+    ) {
+        throw Error('csv not well formated.')
+    }
+    if (
         tensor[0].refY.length <= options.minSamplesSplit ||
         new Set(tensor[0].refY).size === 1
     ) {
@@ -126,32 +137,18 @@ export const parseSortedCSV = (csv: string) => {
         })
 }
 
-export const createSamples = (features: Feature[], splitIndexes: number[]) => {
-    const sample1 = features.map(({ featureId, indexes, value, refY }) => {
-        return {
-            featureId,
-            indexes: indexes.filter((_, ii) => splitIndexes.indexOf(ii) === -1),
-            value: value.filter((_, ii) => splitIndexes.indexOf(ii) === -1),
-            refY: refY.filter((_, ii) => splitIndexes.indexOf(ii) === -1)
-        } as Feature
-    })
-    const sample2 = features.map(({ featureId, indexes, value, refY }) => {
-        return {
-            featureId,
-            indexes: indexes.filter((_, ii) => splitIndexes.indexOf(ii) !== -1),
-            value: value.filter((_, ii) => splitIndexes.indexOf(ii) !== -1),
-            refY: refY.filter((_, ii) => splitIndexes.indexOf(ii) !== -1)
-        } as Feature
-    })
-    const valuesSample2 = splitIndexes.map(testIndex =>
-        features.map(feature => {
-            const index = feature.indexes.indexOf(testIndex)
-            return feature.value[index]
-        })
-    )
-    const expectedSample2 = splitIndexes.map(
-        i => features[0].refY[features[0].indexes.indexOf(i)]
-    )
+export const filterOut = (csv: string, selectedRowIndex: number[]) => {
+    const rows = csv.split('\n')
+    return selectedRowIndex.map(index => rows[index]).join('\n')
+}
 
-    return { expectedSample2, valuesSample2, sample1, sample2 }
+export const getValueOfRows = (csv: string, selectedRowIndex: number[]) => {
+    const features = parseSortedCSV(parseUnsortedCSV(csv))
+    return selectedRowIndex.map(index => {
+        const values = features.map(
+            feature => feature.value[feature.indexes.indexOf(index)]
+        )
+        const expected = features[0].refY[features[0].indexes.indexOf(index)]
+        return { values, expected }
+    })
 }
