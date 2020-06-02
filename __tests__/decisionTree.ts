@@ -37,13 +37,12 @@ describe('createTree', () => {
             })
     }
     it('should predict 145 of 150 right', () => {
-        const file = readFileSync(`${__dirname}/data/iris.csv`)
-        const predictions = createPredictions(
-            file,
-            { minSamplesSplit: 49 },
-            predict
-        )
-        expect(predictions.filter(x => x).length).toBe(145)
+        const file = readFileSync(`${__dirname}/data/iris_500000/1.csv`)
+        const csv = file.toString()
+        const features = parseSortedCSV(csv)
+        const dt = decisionTree(features, { minSamplesSplit: 2 })
+        const prediction = predict([1, 11, 3, 1, 0], dt)
+        expect(prediction).toBe(0)
     })
     it('should predict 20 of 20 right', () => {
         const file = readFileSync(`${__dirname}/data/balloons.csv`)
