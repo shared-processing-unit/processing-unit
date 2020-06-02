@@ -9,7 +9,7 @@ import {
 const file = readFileSync(`${__dirname}/../../__tests__/data/iris.csv`)
 const csv = file.toString()
 const testIndexes = [42, 10, 65, 110, 82, 135]
-const randomNumbers = createRandomForest(150, 5, 1000000, testIndexes)
+const randomNumbers = createRandomForest(150, 5, 200000, testIndexes)
 const testset = getValueOfRows(csv, testIndexes)
 randomNumbers.map((bucket, index) => {
     const dataset = filterOut(csv, bucket)

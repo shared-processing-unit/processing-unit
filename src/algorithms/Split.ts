@@ -10,7 +10,7 @@ export const evaluate = <T>(data: T[]) => {
 
 export const bestEvaluation = <T>(data: T[]) => {
     const ginis = evaluate(data)
-    const value: number = Math.max(...ginis)
+    const value: number = Math.min(...ginis)
     return { splitOn: ginis.indexOf(value), value }
 }
 
@@ -19,11 +19,15 @@ const weightedGinies = <T>(data: T[]) => {
     return data.map((category, i) => {
         const occurence = occurences.get(category) || 0
         occurences.set(category, occurence + 1)
-        return giniImpurity(Array.from(occurences.values())) / (i + 1)
+        const squaredSum = 1 - sum(Array.from(occurences.values()), i + 1)
+        return squaredSum * (1 + i)
     })
 }
-const giniImpurity = (occurence: number[]) => {
-    return occurence.reduce((prev, cur) => (prev += cur * cur), 0)
+const sum = (occurence: number[], nofElements: number) => {
+    return occurence.reduce(
+        (prev, cur) => (prev += cur ** 2 / nofElements ** 2),
+        0
+    )
 }
 
 export default class Split {
