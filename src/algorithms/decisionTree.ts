@@ -12,7 +12,7 @@ export const decisionTree = (
     if (
         tensor[0].refY.length <= options.minSamplesSplit ||
         new Set(tensor[0].refY).size === 1 ||
-        (options.maxDepth && depth > options.maxDepth)
+        (options.maxDepth && depth >= options.maxDepth)
     ) {
         return new Node(new Leaf(tensor[0]))
     }
