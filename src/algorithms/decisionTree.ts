@@ -8,6 +8,8 @@ export const decisionTree = (
     tensor: Feature[],
     options: Options
 ): Node<Leaf> => {
+    navigator.storage.estimate().then(stats => console.log(stats))
+
     if (
         tensor[0].refY.length <= options.minSamplesSplit ||
         new Set(tensor[0].refY).size === 1
