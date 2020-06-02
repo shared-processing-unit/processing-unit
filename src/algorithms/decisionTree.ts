@@ -18,11 +18,16 @@ export const decisionTree = (
     }
     const split = bestSplit(tensor)
     const [left, right] = splitFeatures(tensor, split)
-    return new Node(
-        new Leaf(tensor[split.featureIndex], split),
-        decisionTree(left, options, depth + 1),
-        decisionTree(right, options, depth + 1)
-    )
+    try {
+        return new Node(
+            new Leaf(tensor[split.featureIndex], split),
+            decisionTree(left, options, depth + 1),
+            decisionTree(right, options, depth + 1)
+        )
+    } catch (error) {
+        console.error(error, depth, tensor, options)
+        throw Error(error)
+    }
 }
 
 const splitFeatures = (tensor: Feature[], split: Split) => {
@@ -44,6 +49,6 @@ const bestSplit = (tensor: Feature[]) => {
     })
     const evaluations = [].concat(...(splits as [])) as Split[]
     const ginis = evaluations.map(({ gini }) => gini)
-    const bestGini = Math.max(...ginis)
+    const bestGini = Math.min(...ginis)
     return evaluations[ginis.indexOf(bestGini)]
 }
