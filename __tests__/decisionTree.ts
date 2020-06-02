@@ -46,10 +46,10 @@ describe('createTree', () => {
         expect(predictions.filter(x => x).length).toBe(145)
     })
     it('should not throw an error when calculating on big datafile.', () => {
-        const file = readFileSync(`${__dirname}/data/iris_1000000/1.csv`)
+        const file = readFileSync(`${__dirname}/data/iris_500000/1.csv`)
         const features = parseSortedCSV(parseUnsortedCSV(file.toString()))
         expect(() =>
-            decisionTree(features, { minSamplesSplit: 49 })
+            decisionTree(features, { minSamplesSplit: 2 })
         ).not.toThrowError()
     })
     it('should predict 20 of 20 right', () => {
