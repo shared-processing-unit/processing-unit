@@ -18,16 +18,11 @@ export const decisionTree = (
     }
     const split = bestSplit(tensor)
     const [left, right] = splitFeatures(tensor, split)
-    try {
-        return new Node(
-            new Leaf(tensor[split.featureIndex], split),
-            decisionTree(left, options, depth + 1),
-            decisionTree(right, options, depth + 1)
-        )
-    } catch (error) {
-        console.error(error.message, depth, tensor, options)
-        return new Node(new Leaf(tensor[0]))
-    }
+    return new Node(
+        new Leaf(tensor[split.featureIndex], split),
+        decisionTree(left, options, depth + 1),
+        decisionTree(right, options, depth + 1)
+    )
 }
 
 const splitFeatures = (tensor: Feature[], split: Split) => {
