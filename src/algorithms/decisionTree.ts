@@ -25,8 +25,8 @@ export const decisionTree = (
             decisionTree(right, options, depth + 1)
         )
     } catch (error) {
-        console.error(error, depth, tensor, options)
-        throw Error(error)
+        console.error(error.message, depth, tensor, options)
+        return new Node(new Leaf(tensor[0]))
     }
 }
 
