@@ -35,15 +35,19 @@ const splitFeatures = (tensor: Feature[], split: Split) => {
 }
 
 const bestSplit = (tensor: Feature[]) => {
-    const splits = tensor.map(feature => {
-        const ginis = evaluate(feature.refY)
-        return Array.from(new Set(feature.value)).map(value => {
-            const index = feature.value.indexOf(value)
-            return new Split(ginis[index], index, feature)
+    return tensor
+        .map(feature => {
+            const ginis = evaluate(feature.refY)
+            return Array.from(new Set(feature.value)).reduce(
+                (prev, value) => {
+                    const index = feature.value.indexOf(value)
+                    const current = new Split(ginis[index], index, feature)
+                    return prev.gini < current.gini ? prev : current
+                },
+                { gini: Number.MAX_SAFE_INTEGER } as Split
+            )
         })
-    })
-    const evaluations = [].concat(...(splits as [])) as Split[]
-    const ginis = evaluations.map(({ gini }) => gini)
-    const bestGini = Math.min(...ginis)
-    return evaluations[ginis.indexOf(bestGini)]
+        .reduce((prev, current) => {
+            return prev.gini < current.gini ? prev : current
+        }, {} as Split)
 }

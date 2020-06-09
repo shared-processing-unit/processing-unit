@@ -34,7 +34,7 @@ export default class SharedProcessingUnit {
         this.webSocket.send(
             JSON.stringify({
                 action: 'onResult',
-                message: { subtaskId, error }
+                message: { subtaskId, error, origin: window.location.href }
             })
         )
     }
