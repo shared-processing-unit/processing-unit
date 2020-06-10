@@ -10,7 +10,7 @@
         "build:summUp": "parcel build ./src/SummUpWorker.ts",
         "build:bestSplit": "parcel build ./src/BestSplitWorker.ts",
         "build:decisionTree": "parcel build ./src/DecisionTreeWorker.ts",
-        "build:SPU": "parcel build ./src/index.ts"
+        "build:SPU": "parcel build ./src/index.ts --experimental-scope-hoisting"
     },
     "repository": {
         "type": "git",
