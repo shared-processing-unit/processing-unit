@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime.js'
 import SharedProcessingUnit, { IWebsocket } from './SharedProcessingUnit'
 
 const getData = async (link: string) => {
