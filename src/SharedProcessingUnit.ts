@@ -1,4 +1,4 @@
-import { SubtaskDto } from '@shared-processing-unit/spu-models/dist'
+import SubtaskDto from './SubtaskDto'
 
 export interface IWebsocket {
     send: (message: string) => void
