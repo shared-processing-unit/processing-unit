@@ -16,4 +16,6 @@ The repository contains the code that is executed on the SPU. This includes the 
 ## Deployment
 
 For deployment, the S3 Bucket and WebSocketURI must be specified in `.travis.yml` - script.
+
 Travis handles the continious integration.
+Just merge branch to master.
